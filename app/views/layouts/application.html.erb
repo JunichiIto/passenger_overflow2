@@ -9,7 +9,11 @@
 </head>
 <body>
 <h1>Passenger Overflow 2</h1>
-<%= yield %>
-
+<section class="round">
+  <% flash.each do |key, value| %>
+    <div class="flash <%= key %>"><%= value %></div>
+  <% end %>
+  <%= yield %>
+</section>
 </body>
 </html>
