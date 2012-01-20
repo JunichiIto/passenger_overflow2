@@ -26,4 +26,22 @@ describe UsersController do
     end
   end
 
+  describe "POST 'create'" do
+    describe "failure" do
+      before(:each) do
+        @attr = { :user_name => "" }
+      end
+
+      it "should not create a user" do
+        lambda do
+          post :create, :user => @attr
+        end.should_not change(User, :count)
+      end
+
+      it "should render the 'new' page" do
+        post :create, :user => @attr
+        response.should render_template('new')
+      end
+    end
+  end
 end
