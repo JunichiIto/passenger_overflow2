@@ -5,5 +5,6 @@ class User < ActiveRecord::Base
   validates :user_name, 
             :presence => true, 
             :length => { :maximum => 20 },
-            :format => { :with => user_name_regex }
+            :format => { :with => user_name_regex },
+            :uniqueness => true
 end
