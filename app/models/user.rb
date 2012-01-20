@@ -7,4 +7,8 @@ class User < ActiveRecord::Base
             :length => { :maximum => 20 },
             :format => { :with => user_name_regex },
             :uniqueness => true
+
+  def self.authenticate(user_name)
+    find_by_user_name user_name
+  end
 end

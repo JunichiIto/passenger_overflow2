@@ -34,4 +34,20 @@ describe User do
     user_with_duplicate_email = User.new(@attr)
     user_with_duplicate_email.should_not be_valid
   end
+
+  describe "authenticate method" do
+    before(:each) do
+      @user = User.create!(@attr)
+    end
+
+    it "should return the user on match" do
+      matching_user = User.authenticate(@attr[:user_name])
+      matching_user.should == @user
+    end
+
+    it "should return nil on unmatch" do
+      matching_user = User.authenticate('foobar')
+      matching_user.should be_nil
+    end
+  end
 end
