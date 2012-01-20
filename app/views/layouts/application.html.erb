@@ -9,9 +9,24 @@
 </head>
 <body>
 <h1>Passenger Overflow 2</h1>
+<header>
+  <nav class="round">
+    <ul>
+      <li><%= link_to "Home", root_path %></li>
+      <% if signed_in? %>
+        <li><%= link_to "Profile", current_user %></li>
+      <% end %>
+      <% if signed_in? %>
+        <li><%= link_to "Sign out", signout_path, :method => :delete %></li>
+      <% else %>
+        <li><%= link_to "Sign in", signin_path %></li>
+      <% end %>
+    </ul>
+  </nav>
+</header>
 <section class="round">
   <% flash.each do |key, value| %>
-    <div class="flash <%= key %>"><%= value %></div>
+    <p class="flash <%= key %>"><%= value %></p>
   <% end %>
   <%= yield %>
 </section>
