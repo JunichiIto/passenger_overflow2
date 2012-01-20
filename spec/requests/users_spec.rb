@@ -20,7 +20,7 @@ describe "Users" do
           visit signup_path
           fill_in "User name", :with => "junichiito"
           click_button
-          response.should have_selector("div.flash.success",
+          response.should have_selector("p.flash.success",
                                         :content => "Welcome")
           response.should render_template('users/show')
         end.should change(User, :count).by(1)
@@ -34,7 +34,7 @@ describe "Users" do
         visit signin_path
         fill_in 'User name',    :with => ""
         click_button
-        response.should have_selector("div.flash.error", :content => "Invalid")
+        response.should have_selector("p.flash.error", :content => "Invalid")
       end
     end
 
