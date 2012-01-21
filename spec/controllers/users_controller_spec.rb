@@ -3,6 +3,34 @@ require 'spec_helper'
 describe UsersController do
   render_views
 
+  describe "GET 'index'" do
+    before(:each) do
+      #@user = test_sign_in(Factory(:user))
+      @user = Factory :user
+      second = Factory :user, :user_name => "tanakagonzo"
+      third  = Factory :user, :user_name => "satonenpei"
+
+      @users = [@user, second, third]
+    end
+
+    it "should be successful" do
+      get :index
+      response.should be_success
+    end
+
+    it "should have the right title" do
+      get :index
+      response.should have_selector("h2", :content => "All users")
+    end
+
+    it "should have an element for each user" do
+      get :index
+      @users.each do |user|
+        response.should have_selector("li", :content => user.user_name)
+      end
+    end
+  end
+
   describe "GET 'show'" do
     before(:each) do
       @user = Factory(:user)
