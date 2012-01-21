@@ -5,6 +5,12 @@ describe "Layout links" do
       response.should have_selector("a", :href => signin_path,
                                          :content => "Sign in")
     end
+
+    it "should have an ask question link" do
+      visit root_path
+      response.should have_selector("a", :href => new_question_path,
+                                         :content => "Ask Question")
+    end
   end
 
   describe "when signed in" do
