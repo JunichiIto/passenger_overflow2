@@ -2,7 +2,7 @@
 <ul class="questions">
   <% @questions.each do |question| %>
     <li>
-      <%= question.title %>
+      <%= link_to question.title, question %>
     </li>
   <% end %>
 </ul>

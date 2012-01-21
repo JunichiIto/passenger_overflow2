@@ -31,6 +31,28 @@ describe QuestionsController do
     end
   end
 
+  describe "GET 'show'" do
+    before(:each) do
+      user = Factory :user 
+      @question = Factory :question, :user => user
+    end
+
+    it "should be successful" do
+      get :show, :id => @question
+      response.should be_success
+    end
+
+    it "should have the right title" do
+      get :show, :id => @question
+      response.should have_selector("h2", :content => @question.title)
+    end
+
+    it "should find the right question" do
+      get :show, :id => @question
+      assigns(:question).should == @question
+    end
+  end
+
   describe "access control" do
     it "should deny access to 'create'" do
       get :new
