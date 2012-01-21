@@ -11,3 +11,9 @@ Factory.define :question do |question|
   question.content "Foo bar"
   question.association :user
 end
+
+Factory.define :answer do |answer|
+  answer.content "Foo bar"
+  answer.association :user
+  answer.association :question
+end

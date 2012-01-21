@@ -41,4 +41,14 @@ describe Question do
       @user.questions.build(:content => "  ").should_not be_valid
     end
   end
+
+  describe "answer associations" do
+    before(:each) do
+      @question = Question.create(@attr)
+    end
+
+    it "should have a answers attribute" do
+      @question.should respond_to(:answers)
+    end
+  end
 end
