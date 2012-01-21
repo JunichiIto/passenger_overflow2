@@ -4,6 +4,15 @@ describe QuestionsController do
   render_views
 
   describe "GET 'index'" do
+    before(:each) do
+      user = Factory :user
+      @question = Factory :question, :user => user
+      second = Factory :question, :user => user, :created_at => 1.day.ago
+      third = Factory :question, :user => user, :created_at => 1.hour.ago
+
+      @questions = [@question, second, third]
+    end
+
     it "should be successful" do
       get 'index'
       response.should be_success
@@ -12,6 +21,13 @@ describe QuestionsController do
     it "should have the right title" do
       get :index
       response.should have_selector("h2", :content => "Questions")
+    end
+
+    it "should have an element for each question" do
+      get :index
+      @questions.each do |question|
+        response.should have_selector("li", :content => question.title)
+      end
     end
   end
 

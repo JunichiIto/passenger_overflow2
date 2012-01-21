@@ -2,6 +2,7 @@ class QuestionsController < ApplicationController
   before_filter :authenticate, :only => [:new, :create]
 
   def index
+    @questions = Question.all
   end
 
   def new

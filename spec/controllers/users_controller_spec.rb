@@ -5,7 +5,6 @@ describe UsersController do
 
   describe "GET 'index'" do
     before(:each) do
-      #@user = test_sign_in(Factory(:user))
       @user = Factory :user
       second = Factory :user, :user_name => "tanakagonzo"
       third  = Factory :user, :user_name => "satonenpei"
