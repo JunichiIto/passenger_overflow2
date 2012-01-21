@@ -66,4 +66,16 @@ describe User do
       @user.questions.should == [@q2, @q1]
     end
   end
+
+  describe "answer associations" do
+
+    before(:each) do
+      @user = User.create(@attr)
+    end
+
+    it "should have a answers attribute" do
+      @user.should respond_to(:answers)
+    end
+  end
+
 end

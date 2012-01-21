@@ -2,6 +2,7 @@ class User < ActiveRecord::Base
   attr_accessible :user_name
 
   has_many :questions
+  has_many :answers
 
   user_name_regex = /^[a-z0-9]+$/
   validates :user_name, 
