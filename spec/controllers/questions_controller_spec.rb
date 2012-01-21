@@ -41,4 +41,49 @@ describe QuestionsController do
       response.should have_selector("h2", :content => "Ask Question")
     end
   end
+
+  describe "POST 'create'" do
+    before(:each) do
+      @user = test_sign_in(Factory(:user))
+    end
+
+    describe "failure" do
+      before(:each) do
+        @attr = { :title => "", :content => "" }
+      end
+
+      it "should not create a question" do
+        lambda do
+          post :create, :question => @attr
+        end.should_not change(Question, :count)
+      end
+
+      it "should render the new page" do
+        post :create, :question => @attr
+        response.should render_template('new')
+      end
+    end
+
+    describe "success" do
+      before(:each) do
+        @attr = { :title => "valid title", :content => "Hello there!" }
+      end
+
+      it "should create a question" do
+        lambda do
+          post :create, :question => @attr
+        end.should change(Question, :count).by(1)
+      end
+
+      it "should redirect to the home page" do
+        post :create, :question => @attr
+        response.should redirect_to(root_path)
+      end
+
+      it "should have a flash message" do
+        post :create, :question => @attr
+        flash[:success].should =~ /question created/i
+      end
+    end
+  end
 end
