@@ -50,4 +50,20 @@ describe User do
       matching_user.should be_nil
     end
   end
+
+  describe "question associations" do
+    before :each do
+      @user = User.create @attr
+      @q1 = Factory :question, :user => @user, :created_at => 1.day.ago
+      @q2 = Factory :question, :user => @user, :created_at => 1.hour.ago
+    end
+
+    it "should have a questions attribute" do
+      @user.should respond_to :questions
+    end
+
+    it "should have the right questions in the right order" do
+      @user.questions.should == [@q2, @q1]
+    end
+  end
 end
