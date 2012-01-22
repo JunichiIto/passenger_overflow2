@@ -139,6 +139,15 @@ header h1 a {
     text-decoration: none;
 }
 
+/* FLASH */
+p.flash {
+    color: green;
+    font-size: 120%;
+}
+p.error {
+    color: red;
+}
+
 /* MAIN */
 div.questions,
 div.createdinfo {
