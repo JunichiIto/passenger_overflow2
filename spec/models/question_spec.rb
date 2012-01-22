@@ -44,8 +44,6 @@ describe Question do
 
   describe "answer associations" do
     before(:each) do
-      #@question = Question.create(@attr)
-      #user = Factory :user
       asker = Factory :user, user_name: 'someone'
       @question = Factory :question, user: asker
       @a1 = Factory :answer, question: @question, user: @user, created_at: 1.day.ago
