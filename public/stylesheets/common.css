@@ -110,3 +110,32 @@ div#sitename h1 {
     top: 63px;
     left: 95px;
 }
+
+header ul {
+    padding: 10px 0;
+}
+header ul:after{
+    height: 0;
+    visibility: hidden;
+    content: ".";
+    display: block;
+    clear: both;
+}
+header li{
+    float: left;
+    width: 100px;
+    list-style-type: none;
+}
+header h1 a:link {
+    color: #666;
+}
+header h1 a:visited {
+    color: #666;
+}
+header h1 a:hover {
+    color: #cd4730;
+}
+header h1 a {
+    text-decoration: none;
+}
+
