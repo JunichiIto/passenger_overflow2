@@ -2,7 +2,7 @@
 <p><%= simple_format @question.content %></p>
 <h3>Your Answer</h3>
 <% if signed_in? %>
-  <%= form_for(@answer) do |f| %>
+  <%= form_for [@question, @answer] do |f| %>
     <%= render 'shared/error_messages', :object => f.object %>
     <div class="field">
       <%= f.label :content %><br />
