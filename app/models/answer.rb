@@ -3,4 +3,6 @@ class Answer < ActiveRecord::Base
 
   belongs_to :user
   belongs_to :question
+  
+  default_scope :order => 'answers.created_at DESC'
 end

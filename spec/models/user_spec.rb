@@ -7,7 +7,7 @@ describe User do
   end
 
   it "should create a new instance given valid attributes" do
-    User.create!(@attr)
+    User.create! @attr
   end
 
   it "should require a name" do
@@ -30,14 +30,14 @@ describe User do
   end
 
   it "should reject duplicate user_names" do
-    User.create!(@attr)
+    User.create! @attr
     user_with_duplicate_email = User.new(@attr)
     user_with_duplicate_email.should_not be_valid
   end
 
   describe "authenticate method" do
-    before(:each) do
-      @user = User.create!(@attr)
+    before :each do
+      @user = User.create! @attr
     end
 
     it "should return the user on match" do
@@ -53,7 +53,7 @@ describe User do
 
   describe "question associations" do
     before :each do
-      @user = User.create @attr
+      @user = User.create! @attr
       @q1 = Factory :question, :user => @user, :created_at => 1.day.ago
       @q2 = Factory :question, :user => @user, :created_at => 1.hour.ago
     end
@@ -68,14 +68,20 @@ describe User do
   end
 
   describe "answer associations" do
-
-    before(:each) do
-      @user = User.create(@attr)
+    before :each do
+      @user = Factory :user
+      asker = Factory :user, :user_name => 'someone'
+      question = Factory :question, :user => asker
+      @a1 = Factory :answer, :question => question, :user => @user, :created_at => 1.day.ago
+      @a2 = Factory :answer, :question => question, :user => @user, :created_at => 1.hour.ago
     end
 
     it "should have a answers attribute" do
-      @user.should respond_to(:answers)
+      @user.should respond_to :answers
+    end
+
+    it "should have the right answers in the right order" do
+      @user.answers.should == [@a2, @a1]
     end
   end
-
 end
