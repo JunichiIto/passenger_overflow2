@@ -1,5 +1,15 @@
 <h2><%= @question.title %></h2>
 <p><%= simple_format @question.content %></p>
+<% if !@question.answers.empty? %>
+  <h3>Answer(s)</h3>
+  <ul class="answers">
+    <% @question.answers.each do |answer| %>
+      <li>
+        <%= answer.content %>
+      </li>
+    <% end %>
+  </ul>
+<% end %>
 <h3>Your Answer</h3>
 <% if signed_in? %>
   <%= form_for [@question, @answer] do |f| %>

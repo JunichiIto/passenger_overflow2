@@ -42,7 +42,7 @@ describe "Questions" do
           fill_in :question_title, :with => title
           fill_in :question_content, :with => content
           click_button
-          response.should have_selector("h2", :content => 'Questions')
+          response.should have_selector("h2", :content => title)
         end.should change(Question, :count).by(1)
       end
     end

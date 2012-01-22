@@ -33,8 +33,14 @@ describe QuestionsController do
 
   describe "GET 'show'" do
     before(:each) do
+      @asker = Factory :user, user_name: "beginner"
+      @question = Factory :question, :user => @asker
       @user = Factory :user
-      @question = Factory :question, :user => @user
+      @answer = Factory :answer, :question => @question, :user => @user
+      second = Factory :answer, :question => @question, :user => @user, :created_at => 1.day.ago
+      third = Factory :answer, :question => @question, :user => @user, :created_at => 1.hour.ago
+
+      @answers = [@answer, second, third]
     end
 
     it "should be successful" do
@@ -50,6 +56,13 @@ describe QuestionsController do
     it "should find the right question" do
       get :show, :id => @question
       assigns(:question).should == @question
+    end
+
+    it "should have an element for each answer" do
+      get :show, :id => @question
+      @answers.each do |answer|
+        response.should have_selector("li", :content => answer.content)
+      end
     end
     
     describe "when not signed in" do
@@ -130,9 +143,10 @@ describe QuestionsController do
         end.should change(Question, :count).by(1)
       end
 
-      it "should redirect to the home page" do
+      it "should redirect to the question page" do
         post :create, :question => @attr
-        response.should redirect_to(root_path)
+        #response.should redirect_to(root_path)
+        response.should redirect_to(question_path(assigns(:question)))
       end
 
       it "should have a flash message" do

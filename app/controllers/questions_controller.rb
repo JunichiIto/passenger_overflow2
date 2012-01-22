@@ -7,7 +7,7 @@ class QuestionsController < ApplicationController
 
   def show
     @question = Question.find(params[:id])
-    @answer = @question.answers.build
+    @answer = Answer.new
   end
 
   def new
@@ -18,7 +18,7 @@ class QuestionsController < ApplicationController
     @question  = current_user.questions.build(params[:question])
     if @question.save
       flash[:success] = "Question created!"
-      redirect_to root_path
+      redirect_to @question
     else
       render 'new'
     end
