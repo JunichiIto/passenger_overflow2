@@ -1,8 +1,17 @@
 <h2>Questions</h2>
-<ul class="questions">
+<div class="questions">
   <% @questions.each do |question| %>
-    <li>
-      <%= link_to question.title, question %>
-    </li>
+    <p class="question">
+      <div class="title">
+        <%= link_to question.title, question %>
+      </div>
+      <div class="createdinfo">
+        <%= pluralize(question.answers.count, "Answer") %>
+        [
+        <%= question.created_at.to_s :default %>
+        <%= question.user.user_name %>
+        ]
+      </div>
+    </p>
   <% end %>
-</ul>
+</div>

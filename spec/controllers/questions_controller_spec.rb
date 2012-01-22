@@ -26,7 +26,7 @@ describe QuestionsController do
     it "should have an element for each question" do
       get :index
       @questions.each do |question|
-        response.should have_selector("li", :content => question.title)
+        response.should have_selector("div.title", :content => question.title)
       end
     end
   end
@@ -61,7 +61,7 @@ describe QuestionsController do
     it "should have an element for each answer" do
       get :show, :id => @question
       @answers.each do |answer|
-        response.should have_selector("li", :content => answer.content)
+        response.should have_selector("p", :content => answer.content)
       end
     end
     

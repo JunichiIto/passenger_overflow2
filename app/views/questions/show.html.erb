@@ -1,14 +1,30 @@
 <h2><%= @question.title %></h2>
-<p><%= simple_format @question.content %></p>
+<div class="question">
+  <div class="content">
+    <%= simple_format @question.content %>
+  </div>
+  <div class="createdinfo">
+    [
+    <%= @question.created_at.to_s %>
+    <%= @question.user.user_name %>
+    ]
+  </div>
+</div>
 <% if !@question.answers.empty? %>
-  <h3>Answer(s)</h3>
-  <ul class="answers">
+  <h3><%= pluralize(@question.answers.count, "Answer") %></h3>
+  <div class="answers">
     <% @question.answers.each do |answer| %>
-      <li>
-        <%= answer.content %>
-      </li>
+      <div class="answer">
+        <%= simple_format answer.content %>
+        <div class="createdinfo">
+          [
+          <%= answer.created_at.to_s %>
+          <%= answer.user.user_name %>
+          ]
+        </div>
+      </div>
     <% end %>
-  </ul>
+  </div>
 <% end %>
 <h3>Your Answer</h3>
 <% if signed_in? %>

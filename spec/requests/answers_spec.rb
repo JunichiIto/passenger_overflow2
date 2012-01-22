@@ -31,7 +31,7 @@ describe "Answers" do
           visit question_path @question
           fill_in :answer_content, :with => content
           click_button
-          response.should have_selector("li", :content => content)
+          response.should have_selector("p", :content => content)
         end.should change(Answer, :count).by(1)
       end
     end
