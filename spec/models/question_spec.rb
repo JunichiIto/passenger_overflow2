@@ -44,11 +44,20 @@ describe Question do
 
   describe "answer associations" do
     before(:each) do
-      @question = Question.create(@attr)
+      #@question = Question.create(@attr)
+      #user = Factory :user
+      asker = Factory :user, user_name: 'someone'
+      @question = Factory :question, user: asker
+      @a1 = Factory :answer, question: @question, user: @user, created_at: 1.day.ago
+      @a2 = Factory :answer, question: @question, user: @user, created_at: 1.hour.ago
     end
 
     it "should have a answers attribute" do
       @question.should respond_to(:answers)
+    end
+
+    it "should have the right answers in the right order" do
+      @question.answers.should == [@a2, @a1]
     end
   end
 end

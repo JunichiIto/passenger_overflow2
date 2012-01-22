@@ -70,10 +70,10 @@ describe User do
   describe "answer associations" do
     before :each do
       @user = Factory :user
-      asker = Factory :user, :user_name => 'someone'
-      question = Factory :question, :user => asker
-      @a1 = Factory :answer, :question => question, :user => @user, :created_at => 1.day.ago
-      @a2 = Factory :answer, :question => question, :user => @user, :created_at => 1.hour.ago
+      asker = Factory :user, user_name: 'someone'
+      question = Factory :question, user: asker
+      @a1 = Factory :answer, question: question, user: @user, created_at: 1.day.ago
+      @a2 = Factory :answer, question: question, user: @user, created_at: 1.hour.ago
     end
 
     it "should have a answers attribute" do
