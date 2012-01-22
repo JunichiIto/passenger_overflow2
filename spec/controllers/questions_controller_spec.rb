@@ -33,8 +33,8 @@ describe QuestionsController do
 
   describe "GET 'show'" do
     before(:each) do
-      user = Factory :user 
-      @question = Factory :question, :user => user
+      @user = Factory :user
+      @question = Factory :question, :user => @user
     end
 
     it "should be successful" do
@@ -50,6 +50,23 @@ describe QuestionsController do
     it "should find the right question" do
       get :show, :id => @question
       assigns(:question).should == @question
+    end
+    
+    describe "when not signed in" do
+      it "should not have textarea for answer" do
+        get :show, :id => @question
+        response.should_not have_selector("textarea")
+      end
+    end
+    
+    describe "when signed in" do
+      before :each do
+        test_sign_in @user
+      end
+      it "should have textarea for answer" do
+        get :show, :id => @question
+        response.should have_selector("textarea")
+      end
     end
   end
 

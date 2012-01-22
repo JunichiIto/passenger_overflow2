@@ -1,15 +1,12 @@
 PassengerOverflow2::Application.routes.draw do
-  resources :users
+  resources :users, :only => [:index, :show, :new, :create]
   resources :sessions, :only => [:new, :create, :destroy]
-  resources :questions, :only => [:new, :create, :show]
+  resources :questions, :only => [:new, :create, :show, :index]
+  resources :answers, :only => [:create]
   
   match '/signup', :to => 'users#new'
   match '/signin',  :to => 'sessions#new'
   match '/signout', :to => 'sessions#destroy'
-
-  get "users/new"
-
-  get "questions/index"
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
