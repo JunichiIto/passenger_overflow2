@@ -58,4 +58,24 @@ describe Question do
       @question.answers.should == [@a2, @a1]
     end
   end
+
+  describe "accepted answer associations" do
+    before(:each) do
+      asker = Factory :user, user_name: 'someone'
+      @question = Factory :question, user: asker
+      @a1 = Factory :answer, question: @question, user: @user, created_at: 1.day.ago
+      @a2 = Factory :answer, question: @question, user: @user, created_at: 1.hour.ago
+    end
+
+    it "should have an accepted  answer attribute" do
+      @question.should respond_to(:accepted_answer)
+    end
+
+    it "should accept an answer" do
+      @question.accepted_answer = @a2
+      @question.save!
+      @question.reload
+      @question.accepted_answer.should == @q2
+    end
+  end
 end
