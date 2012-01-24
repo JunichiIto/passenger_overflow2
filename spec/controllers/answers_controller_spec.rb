@@ -40,13 +40,45 @@ describe AnswersController do
 
       it "should redirect to the question page" do
         post :create, :question_id => @question, :answer => @attr
-        response.should redirect_to(question_path(assigns(:question)))
+        response.should redirect_to @question
       end
 
       it "should have a flash message" do
         post :create, :question_id => @question, :answer => @attr
         flash[:success].should =~ /answer created/i
       end
+    end
+  end
+
+  describe "post 'accept'" do
+    before(:each) do
+      @user = test_sign_in(Factory(:user))
+      @asker = Factory :user, user_name: "beginner"
+      @question = Factory :question, :user => @asker
+      @answer = Factory :answer, :question => @question, :user => @user
+      second = Factory :answer, :question => @question, :user => @user, :created_at => 1.day.ago
+      third = Factory :answer, :question => @question, :user => @user, :created_at => 1.hour.ago
+    end
+
+    it "should accept an answer" do
+      question = @answer.question
+      #lambda do
+      #  post 'accept', :id => @answer
+      #  question.reload
+      #end.should change(question, :accepted_answer).from(nil).to(@answer)
+      post 'accept', :id => @answer
+      question.reload
+      question.accepted_answer.should_not be_nil
+    end
+
+    it "should redirect to the question page" do
+      post 'accept', :id => @answer
+      response.should redirect_to @question
+    end
+
+    it "should have a flash message" do
+      post 'accept', :id => @answer
+      flash[:success].should =~ /answer has been accepted/i
     end
   end
 
