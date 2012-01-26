@@ -10,6 +10,7 @@ Factory.define :question do |question|
   question.title "my title"
   question.content "Foo bar"
   question.association :user
+  question.accepted_answer nil
 end
 
 Factory.define :answer do |answer|

@@ -77,5 +77,26 @@ describe Question do
       @question.reload
       @question.accepted_answer.should == @q2
     end
+    
+    it "should have an accepted? attribute" do
+      @question.should respond_to(:accepted?)
+    end
+
+    describe "when accepted" do
+      before :each do
+        @question.accepted_answer = @a2
+        @question.save!
+      end
+
+      it "should be accepted" do
+        @question.should be_accepted
+      end
+    end
+
+    describe "when not accepted" do
+      it "should not be accepted" do
+        @question.should_not be_accepted
+      end
+    end
   end
 end

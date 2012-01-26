@@ -83,7 +83,7 @@ describe QuestionsController do
       end
     end
     
-    describe "post /accept" do
+    describe "accept links" do
       describe "when asker signed in" do
         before :each do
           test_sign_in @asker
@@ -92,7 +92,7 @@ describe QuestionsController do
         describe "not accepted yet" do
           it "should have accept links" do
             get :show, :id => @question
-            response.should have_selector("a", :content => "accept")
+            response.should have_selector("a", :content => "Accept")
           end
         end
       end
@@ -102,20 +102,38 @@ describe QuestionsController do
           test_sign_in @user
         end
       
-        it "should not have accept links"
+        it "should not have accept links" do
+          get :show, :id => @question
+          response.should_not have_selector("a", :content => "Accept")
+        end
       end
 
       describe "when not signed in" do
-        it "should not have accept links"
+        it "should not have accept links" do
+          get :show, :id => @question
+          response.should_not have_selector("a", :content => "Accept")
+        end
       end
 
       describe "already accepted" do
         before :each do
           test_sign_in @asker
+          @question.update_attribute :accepted_answer_id, @answer
+        end
+    
+        it "should already accepted" do
+          @question.should be_accepted
         end
       
-        it "should not have accept links"
-        it "should indicate an answer has been accepted"
+        it "should not have accept links" do
+          get :show, :id => @question
+          response.should_not have_selector("a", :content => "Accept")
+        end
+
+        it "should indicate an answer has been accepted" do
+          get :show, :id => @question
+          response.should have_selector("span", :content => "Accepted")
+        end
       end
     end
   end

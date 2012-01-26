@@ -10,4 +10,8 @@ class Question < ActiveRecord::Base
   validates :user_id, :presence => true
 
   default_scope :order => 'questions.created_at DESC'
+
+  def accepted?
+    self.accepted_answer
+  end
 end
