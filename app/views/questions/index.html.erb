@@ -7,9 +7,9 @@
       </div>
       <div class="createdinfo">
         <% if question.accepted? %>
-          <%= pluralize(question.answers.count, "Answer") %>
-        <% else %>
           <%= content_tag "span", pluralize(question.answers.count, "Answer"), { class: "accepted" } %>
+        <% else %>
+          <%= pluralize(question.answers.count, "Answer") %>
         <% end %>
         [
         <%= question.created_at.to_s :default %>
