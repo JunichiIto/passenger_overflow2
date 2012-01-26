@@ -8,6 +8,7 @@ class AnswersController < ApplicationController
       flash[:success] = "Answer created!"
       redirect_to @question
     else
+      @question = Question.find params[:question_id]
       render 'questions/show'
     end
   end

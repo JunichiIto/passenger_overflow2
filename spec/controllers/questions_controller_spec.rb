@@ -76,9 +76,46 @@ describe QuestionsController do
       before :each do
         test_sign_in @user
       end
+      
       it "should have textarea for answer" do
         get :show, :id => @question
         response.should have_selector("textarea")
+      end
+    end
+    
+    describe "post /accept" do
+      describe "when asker signed in" do
+        before :each do
+          test_sign_in @asker
+        end
+      
+        describe "not accepted yet" do
+          it "should have accept links" do
+            get :show, :id => @question
+            response.should have_selector("a", :content => "accept")
+          end
+        end
+      end
+
+      describe "when other signed in" do
+        before :each do
+          test_sign_in @user
+        end
+      
+        it "should not have accept links"
+      end
+
+      describe "when not signed in" do
+        it "should not have accept links"
+      end
+
+      describe "already accepted" do
+        before :each do
+          test_sign_in @asker
+        end
+      
+        it "should not have accept links"
+        it "should indicate an answer has been accepted"
       end
     end
   end

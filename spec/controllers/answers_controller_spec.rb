@@ -62,13 +62,10 @@ describe AnswersController do
 
     it "should accept an answer" do
       question = @answer.question
-      #lambda do
-      #  post 'accept', :id => @answer
-      #  question.reload
-      #end.should change(question, :accepted_answer).from(nil).to(@answer)
-      post 'accept', :id => @answer
-      question.reload
-      question.accepted_answer.should_not be_nil
+      lambda do
+        post 'accept', :id => @answer
+        question.reload
+      end.should change(question, :accepted_answer).from(nil).to(@answer)
     end
 
     it "should redirect to the question page" do
