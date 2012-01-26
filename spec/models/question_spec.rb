@@ -84,7 +84,7 @@ describe Question do
 
     describe "when accepted" do
       before :each do
-        @question.accepted_answer = @a2
+        @question.accepted_answer_id = @a2.id
         @question.save!
       end
 

@@ -15,9 +15,9 @@ class AnswersController < ApplicationController
 
   def accept
     answer = Answer.find params[:id]
-    question = answer.question
-    question.update_attribute :accepted_answer_id, answer
+    @question = answer.question
+    @question.update_attribute :accepted_answer_id, answer.id
     flash[:success] = "Answer has been accepted!"
-    redirect_to question
+    redirect_to @question
   end
 end

@@ -12,6 +12,6 @@ class Question < ActiveRecord::Base
   default_scope :order => 'questions.created_at DESC'
 
   def accepted?
-    self.accepted_answer
+    self.accepted_answer_id
   end
 end

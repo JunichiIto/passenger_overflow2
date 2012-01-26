@@ -157,3 +157,7 @@ div.answer,
 div.question {
     margin-bottom: 3em;
 }
+span.accepted {
+    color: green;
+}
+
