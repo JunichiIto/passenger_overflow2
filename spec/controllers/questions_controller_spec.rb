@@ -5,10 +5,10 @@ describe QuestionsController do
 
   describe "GET 'index'" do
     before(:each) do
-      user = Factory :user
-      @question = Factory :question, :user => user
-      second = Factory :question, :user => user, :created_at => 1.day.ago
-      third = Factory :question, :user => user, :created_at => 1.hour.ago
+      @user = Factory :user
+      @question = Factory :question, :user => @user
+      second = Factory :question, :user => @user, :created_at => 1.day.ago
+      third = Factory :question, :user => @user, :created_at => 1.hour.ago
 
       @questions = [@question, second, third]
     end
@@ -27,6 +27,18 @@ describe QuestionsController do
       get :index
       @questions.each do |question|
         response.should have_selector("div.title", :content => question.title)
+      end
+    end
+
+    describe "when an answer is accepted" do
+      before(:each) do
+        @answer = Factory :answer, :question => @question, :user => @user
+        @question.accept @answer
+      end
+
+      it "should indicate an answer is accepted" do
+        get :index
+        response.should have_selector("span.accepted")
       end
     end
   end
