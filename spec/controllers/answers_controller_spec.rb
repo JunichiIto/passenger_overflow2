@@ -62,6 +62,7 @@ describe AnswersController do
 
     it "should accept an answer" do
       question = @answer.question
+      question.accepted_answer.should be_nil
       lambda do
         post 'accept', :id => @answer
         question.reload

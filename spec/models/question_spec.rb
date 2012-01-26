@@ -67,15 +67,14 @@ describe Question do
       @a2 = Factory :answer, question: @question, user: @user, created_at: 1.hour.ago
     end
 
-    it "should have an accepted  answer attribute" do
-      @question.should respond_to(:accepted_answer)
+    it "should have an accept attribute" do
+      @question.should respond_to(:accept)
     end
 
     it "should accept an answer" do
-      @question.accepted_answer = @a2
-      @question.save!
-      @question.reload
-      @question.accepted_answer.should == @q2
+      @question.accept @a2
+      @question.accepted_answer.should == @a2
+      @question.accepted_answer_id.should == @a2.id
     end
     
     it "should have an accepted? attribute" do
@@ -84,8 +83,7 @@ describe Question do
 
     describe "when accepted" do
       before :each do
-        @question.accepted_answer_id = @a2.id
-        @question.save!
+        @question.accept @a2
       end
 
       it "should be accepted" do

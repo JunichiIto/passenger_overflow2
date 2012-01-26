@@ -118,7 +118,7 @@ describe QuestionsController do
       describe "already accepted" do
         before :each do
           test_sign_in @asker
-          @question.update_attribute :accepted_answer_id, @answer
+          @question.accept @answer
         end
     
         it "should already accepted" do

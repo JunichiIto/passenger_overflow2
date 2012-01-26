@@ -3,7 +3,6 @@ class Question < ActiveRecord::Base
 
   belongs_to :user
   has_many :answers
-  has_one :accepted_answer, class_name: "Answer", primary_key: "accepted_answer_id"
 
   validates :title, :presence => true, :length => { :maximum => 255 }
   validates :content, :presence => true
@@ -11,7 +10,15 @@ class Question < ActiveRecord::Base
 
   default_scope :order => 'questions.created_at DESC'
 
+  def accept(answer)
+    self.update_attribute :accepted_answer_id, answer.id
+  end
+
+  def accepted_answer
+    Answer.find_by_id accepted_answer_id
+  end
+
   def accepted?
-    self.accepted_answer_id
+    accepted_answer_id
   end
 end
