@@ -1,5 +1,5 @@
 class AnswersController < ApplicationController
-  before_filter :authenticate, :only => [:create]
+  before_filter :authenticate, :only => [:create, :accept]
   def create
     @question = Question.find params[:question_id]
     @answer = @question.answers.build params[:answer]

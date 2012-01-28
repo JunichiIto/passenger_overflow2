@@ -97,4 +97,8 @@ RSpec.configure do |config|
   def test_sign_in(user)
     controller.sign_in(user)
   end
+
+  def current_user
+    controller.current_user
+  end
 end

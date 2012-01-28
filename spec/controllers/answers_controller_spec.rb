@@ -81,8 +81,20 @@ describe AnswersController do
   end
 
   describe "access control" do
+    before(:each) do
+      @user = Factory :user
+      @asker = Factory :user, user_name: "beginner"
+      @question = Factory :question, :user => @asker
+      @answer = Factory :answer, :question => @question, :user => @user
+    end
+
     it "should deny access to 'create'" do
       post :create, question_id: 1
+      response.should redirect_to(signin_path)
+    end
+
+    it "should deny access to 'accept'" do
+      post 'accept', :id => @answer
       response.should redirect_to(signin_path)
     end
   end
