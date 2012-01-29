@@ -148,6 +148,35 @@ describe QuestionsController do
         end
       end
     end
+
+    describe "vote links" do
+      describe "when asker logged in" do
+        before :each do
+          test_sign_in @asker
+        end
+        describe "and answer not voted yet" do
+          it "should have vote link" do
+            get :show, :id => @question
+            response.should have_selector("a", :content => "Vote+")
+          end
+        end
+        describe "and answer already voted" do
+          it "should indicate already voted" 
+        end
+      end
+      describe "when teacher logged in" do
+        it "should not have vote link for own answer"
+        describe "and answer not voted yet" do
+          it "should have vote link"
+        end
+        describe "and answer already voted" do
+          it "should indicate already voted"
+        end
+      end
+      describe "when others already voted" do
+        it "should indicate vote count"
+      end
+    end
   end
 
   describe "access control" do

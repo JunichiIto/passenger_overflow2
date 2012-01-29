@@ -150,7 +150,8 @@ p.error {
 
 /* MAIN */
 div.questions,
-div.createdinfo {
+div.createdinfo,
+div.voteinfo {
     margin-left: 10px;
 }
 div.answer,

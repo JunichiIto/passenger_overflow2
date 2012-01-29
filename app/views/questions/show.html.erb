@@ -31,6 +31,10 @@
           <%= answer.user.user_name %>
           ]
         </div>
+        <div class="voteinfo">
+          <%= pluralize(answer.votes.count, "vote") %>
+          <%= link_to "Vote+", vote_answer_path(answer), { method: :post } %>
+        </div>
       </div>
     <% end %>
   </div>
