@@ -1,5 +1,6 @@
 require 'spec_helper'
 
+# TODO Add accept test
 describe "Answers" do
   before(:each) do
     user = Factory(:user)
