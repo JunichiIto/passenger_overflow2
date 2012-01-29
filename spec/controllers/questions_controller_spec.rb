@@ -150,14 +150,18 @@ describe QuestionsController do
     end
 
     describe "vote links" do
+      before :each do
+        other = Factory :user, user_name: "someone"
+        forth = Factory :answer, :question => @question, :user => other
+      end
       describe "when asker logged in" do
         before :each do
           test_sign_in @asker
         end
         describe "and answer not voted yet" do
-          it "should have 3 vote links" do
+          it "should have 4 vote links" do
             get :show, :id => @question
-            response.should have_selector("a.vote", :count => 3)
+            response.should have_selector("a.vote", :count => 4)
           end
         end
         describe "and answer already voted" do
@@ -165,9 +169,9 @@ describe QuestionsController do
             @asker.vote! @answer
           end
 
-          it "should have 2 vote links" do
+          it "should have 3 vote links" do
             get :show, :id => @question
-            response.should have_selector("a.vote", :count => 2)
+            response.should have_selector("a.vote", :count => 3)
           end
           
           it "should indicate already voted" do
@@ -177,12 +181,15 @@ describe QuestionsController do
         end
       end
       describe "when teacher logged in" do
-        it "should not have vote link for own answer"
+        before :each do
+          test_sign_in @user
+        end
+        it "should not have vote link for own answer" do
+          get :show, :id => @question
+          response.should have_selector("a.vote", :count => 1)
+        end
         describe "and answer not voted yet" do
           it "should have vote link"
-        end
-        describe "and answer already voted" do
-          it "should indicate already voted"
         end
       end
       describe "when others already voted" do

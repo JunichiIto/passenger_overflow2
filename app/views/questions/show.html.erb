@@ -36,7 +36,9 @@
             <%= content_tag "span", pluralize(answer.votes.count, "vote"), { class: "voted" } %>
           <% else %>
             <%= pluralize(answer.votes.count, "vote") %>
-            <%= link_to "Vote+", vote_answer_path(answer), { method: :post, class: "vote" } %>
+            <% if answer.user != current_user %>
+              <%= link_to "Vote+", vote_answer_path(answer), { method: :post, class: "vote" } %>
+            <% end %>
           <% end %>
         </div>
       </div>
