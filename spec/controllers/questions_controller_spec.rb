@@ -155,13 +155,25 @@ describe QuestionsController do
           test_sign_in @asker
         end
         describe "and answer not voted yet" do
-          it "should have vote link" do
+          it "should have 3 vote links" do
             get :show, :id => @question
-            response.should have_selector("a", :content => "Vote+")
+            response.should have_selector("a.vote", :count => 3)
           end
         end
         describe "and answer already voted" do
-          it "should indicate already voted" 
+          before :each do
+            @asker.vote! @answer
+          end
+
+          it "should have 2 vote links" do
+            get :show, :id => @question
+            response.should have_selector("a.vote", :count => 2)
+          end
+          
+          it "should indicate already voted" do
+            get :show, :id => @question
+            response.should have_selector("span.voted", :count => 1)
+          end
         end
       end
       describe "when teacher logged in" do

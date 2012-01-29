@@ -161,4 +161,6 @@ div.question {
 span.accepted {
     color: green;
 }
-
+span.voted {
+    color: orange;
+}

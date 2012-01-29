@@ -20,4 +20,8 @@ class User < ActiveRecord::Base
     vote = votes.build user: self, answer: answer
     vote.save!
   end
+  
+  def already_voted?(answer)
+    votes.exists? answer_id: answer
+  end
 end

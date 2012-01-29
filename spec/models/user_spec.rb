@@ -109,5 +109,11 @@ describe User do
         @asker.vote! @a1
       end.should change(@a1.votes, :count).by(1)
     end  
+    
+    it "should be already voted after vote cast" do
+      @asker.already_voted?(@a1).should be_false
+      @asker.vote! @a1
+      @asker.already_voted?(@a1).should be_true
+    end
   end
 end

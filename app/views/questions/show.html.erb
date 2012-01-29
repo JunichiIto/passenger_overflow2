@@ -32,8 +32,12 @@
           ]
         </div>
         <div class="voteinfo">
-          <%= pluralize(answer.votes.count, "vote") %>
-          <%= link_to "Vote+", vote_answer_path(answer), { method: :post } %>
+          <% if signed_in? && current_user.already_voted?(answer) %>
+            <%= content_tag "span", pluralize(answer.votes.count, "vote"), { class: "voted" } %>
+          <% else %>
+            <%= pluralize(answer.votes.count, "vote") %>
+            <%= link_to "Vote+", vote_answer_path(answer), { method: :post, class: "vote" } %>
+          <% end %>
         </div>
       </div>
     <% end %>
