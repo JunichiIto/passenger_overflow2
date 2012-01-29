@@ -13,7 +13,7 @@
         <% end %>
         [
         <%= question.created_at.to_s :default %>
-        <%= question.user.user_name %>
+        <%= render_user question.user %>
         ]
       </div>
     </p>

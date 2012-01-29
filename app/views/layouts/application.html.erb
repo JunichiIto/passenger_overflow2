@@ -10,7 +10,13 @@
 <body>
 <header>
   <h1><%= link_to "Passenger Overflow", root_path %></h1>
-  <p><%= "Current User: #{current_user.user_name}" if signed_in? %></p>
+  <% if signed_in? %>
+    <p>
+      Current User:
+      <%= link_to current_user.user_name, current_user %>
+      <%= current_user.reputation_point %>
+    </p>
+  <% end %>
   <nav class="round">
     <ul>
       <li><%= link_to "Ask Question", new_question_path %></li>

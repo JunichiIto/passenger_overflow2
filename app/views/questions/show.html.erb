@@ -6,7 +6,7 @@
   <div class="createdinfo">
     [
     <%= @question.created_at.to_s %>
-    <%= @question.user.user_name %>
+    <%= render_user @question.user %>
     ]
   </div>
 </div>
@@ -28,7 +28,7 @@
           <% end %>
           [
           <%= answer.created_at.to_s %>
-          <%= answer.user.user_name %>
+          <%= render_user answer.user %>
           ]
         </div>
         <div class="voteinfo">
