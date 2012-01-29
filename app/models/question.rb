@@ -11,7 +11,10 @@ class Question < ActiveRecord::Base
   default_scope :order => 'questions.created_at DESC'
 
   def accept(answer)
-    self.update_attribute :accepted_answer_id, answer.id
+    #TODO should use transaction??
+    update_attribute :accepted_answer_id, answer.id
+    user.reputations.create reason: "accepted", point: 2, activity: answer
+    answer.user.reputations.create reason: "accept", point: 15, activity: answer
   end
 
   def accepted_answer

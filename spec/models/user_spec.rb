@@ -114,6 +114,20 @@ describe User do
       @asker.vote! @a1
       @asker.already_voted?(@a1).should be_true
     end
+
+    it "should increase teacher's reputation" do
+      lambda do
+        @asker.vote! @a1
+      end.should change(@user.reputations, :size).from(0).to(1)
+    end
+
+    it "should have the right reputation" do
+      vote = @asker.vote! @a1
+      rep = @user.reputations.pop
+      rep.activity.should == vote
+      rep.reason.should == "upvote"
+      rep.point.should == 10
+    end
   end
 
   describe "reputation associations" do

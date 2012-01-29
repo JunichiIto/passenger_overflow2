@@ -61,8 +61,8 @@ describe Question do
 
   describe "accepted answer associations" do
     before(:each) do
-      asker = Factory :user, user_name: 'someone'
-      @question = Factory :question, user: asker
+      @asker = Factory :user, user_name: 'someone'
+      @question = Factory :question, user: @asker
       @a1 = Factory :answer, question: @question, user: @user, created_at: 1.day.ago
       @a2 = Factory :answer, question: @question, user: @user, created_at: 1.hour.ago
     end
@@ -79,6 +79,40 @@ describe Question do
     
     it "should have an accepted? attribute" do
       @question.should respond_to(:accepted?)
+    end
+
+    describe "reputation on asker" do
+      it "should increase asker's reputation" do
+        lambda do
+          @question.accept @a2
+        end.should change(@asker.reputations, :size).from(0).to(1)
+      end
+
+      it "should add the right reputation" do
+        @question.accept @a2
+        rep = @asker.reputations.pop
+        rep.activity.should == @a2
+        rep.reason.should == "accepted"
+        rep.point.should == 2
+        rep.user.should == @asker
+      end
+    end
+
+    describe "reputation on teacher" do
+      it "should increase teacher's reputation" do
+        lambda do
+          @question.accept @a2
+        end.should change(@user.reputations, :size).from(0).to(1)
+      end
+
+      it "should add the right reputation" do
+        @question.accept @a2
+        rep = @user.reputations.pop
+        rep.activity.should == @a2
+        rep.reason.should == "accept"
+        rep.point.should == 15
+        rep.user.should == @user
+      end
     end
 
     describe "when accepted" do
