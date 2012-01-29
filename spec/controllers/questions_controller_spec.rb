@@ -188,12 +188,22 @@ describe QuestionsController do
           get :show, :id => @question
           response.should have_selector("a.vote", :count => 1)
         end
-        describe "and answer not voted yet" do
-          it "should have vote link"
+      end
+      describe "when not signed in" do
+        it "should not have no vote links" do
+          get :show, :id => @question
+          response.should_not have_selector("a.vote")
         end
       end
-      describe "when others already voted" do
-        it "should indicate vote count"
+      describe "when already voted" do
+        before :each do
+          @asker.vote! @answer
+        end
+        it "should indicate vote count" do
+          get :show, :id => @question
+          response.should have_selector("span", :content => "1 vote", :count => 1)
+          response.should have_selector("span", :content => "0 votes", :count => 3)
+        end
       end
     end
   end
