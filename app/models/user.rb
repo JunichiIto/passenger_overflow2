@@ -27,4 +27,8 @@ class User < ActiveRecord::Base
   def already_voted?(answer)
     votes.exists? answer_id: answer
   end
+
+  def reputation_point
+    Reputation.where("user_id = ?", id).sum(:point)
+  end
 end

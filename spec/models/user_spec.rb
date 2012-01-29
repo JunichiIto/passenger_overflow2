@@ -147,4 +147,32 @@ describe User do
       @user.reputations.should == [@r2, @r1]
     end
   end
+
+  describe "reputation points" do
+    before :each do
+      @user = Factory :user
+      asker = Factory :user, user_name: 'someone'
+      other = Factory :user, user_name: 'other'
+      question = Factory :question, user: asker
+      a1 = Factory :answer, question: question, user: @user
+      v1 = Factory :vote, user: asker, answer: a1
+
+      #user answers a question and is accepted and voted
+      question.accept a1
+      other.vote! a1
+
+      #user asks a question and accept answer
+      my_question = Factory :question, user: @user
+      ans_to_my_question = Factory :answer, question: my_question, user: other
+      my_question.accept ans_to_my_question
+    end    
+
+    it "should have 3 reputations" do
+      @user.reputations.size.should == 3
+    end
+
+    it "should have the right reputation point" do
+      @user.reputation_point.should == 27
+    end
+  end
 end
