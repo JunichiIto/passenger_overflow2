@@ -6,6 +6,7 @@ PassengerOverflow2::Application.routes.draw do
   end  
   resources :answers do
     post :accept, on: :member
+    post :vote, on: :member
   end
 
   match '/signup', :to => 'users#new'

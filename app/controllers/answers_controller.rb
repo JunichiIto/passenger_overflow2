@@ -1,5 +1,5 @@
 class AnswersController < ApplicationController
-  before_filter :authenticate, :only => [:create, :accept]
+  before_filter :authenticate, :only => [:create, :accept, :vote]
   def create
     @question = Question.find params[:question_id]
     @answer = @question.answers.build params[:answer]
@@ -19,5 +19,8 @@ class AnswersController < ApplicationController
     @question.accept answer
     flash[:success] = "Answer has been accepted!"
     redirect_to @question
+  end
+
+  def vote
   end
 end

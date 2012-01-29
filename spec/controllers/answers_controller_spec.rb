@@ -97,5 +97,10 @@ describe AnswersController do
       post 'accept', :id => @answer
       response.should redirect_to(signin_path)
     end
+    
+    it "should deny access to 'vote'" do
+      post 'vote', :id => @answer
+      response.should redirect_to(signin_path)
+    end
   end
 end
