@@ -1,8 +1,8 @@
 <h2>User</h2>
-<p><%= @user.user_name %></p>
+<p class="username"><%= @user.user_name %></p>
 <%= content_tag "h3", "#{@user.reputation_point} Reputation" %>
 <% if !@user.reputations.empty? %>
-  <table border="0">
+  <table border="0" class="rephist">
   <% @user.reputations.each do |rep| %>
     <tr>
       <td><%= "+" + rep.point.to_s %></td>

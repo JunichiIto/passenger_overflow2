@@ -35,7 +35,7 @@ h1 {
 }
 
 h2 {
-    padding: 0.4em 0 0.8em 0;
+    padding: 0.4em 0 0.4em 0;
     color: #cd4730;
     font-size: 120%;
 }
@@ -163,4 +163,10 @@ span.accepted {
 }
 span.voted {
     color: orange;
+}
+table.rephist td {
+    padding: 5px 10px;
+}
+p.username {
+    font-size: 120%;
 }
