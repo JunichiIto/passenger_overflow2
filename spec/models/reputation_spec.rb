@@ -46,6 +46,10 @@ describe Reputation do
       @reputation.activity_id.should == @vote.id
       @reputation.activity.should == @vote
     end
+  
+    it "should return the right question" do
+      @reputation.question.should == @question
+    end
   end
 
   describe "accept associations" do
@@ -57,6 +61,10 @@ describe Reputation do
       @reputation.activity_id.should == @answer.id
       @reputation.activity.should == @answer
     end
+  
+    it "should return the right question" do
+      @reputation.question.should == @question
+    end
   end
 
   describe "accepted associations" do
@@ -67,6 +75,10 @@ describe Reputation do
     it "should have the right associated answer" do
       @reputation.activity_id.should == @answer.id
       @reputation.activity.should == @answer
+    end
+  
+    it "should return the right question" do
+      @reputation.question.should == @question
     end
   end
 end

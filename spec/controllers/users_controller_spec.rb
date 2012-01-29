@@ -33,21 +33,59 @@ describe UsersController do
   describe "GET 'show'" do
     before(:each) do
       @user = Factory(:user)
+      asker = Factory :user, user_name: 'someone'
+      other = Factory :user, user_name: 'other'
+      question = Factory :question, user: asker
+      a1 = Factory :answer, question: question, user: @user
+      v1 = Factory :vote, user: asker, answer: a1
+
+      #user answers a question and is accepted and voted
+      question.accept a1
+      other.vote! a1
+
+      #user asks a question and accept answer
+      my_question = Factory :question, user: @user
+      ans_to_my_question = Factory :answer, question: my_question, user: other
+      my_question.accept ans_to_my_question
+
+      get :show, :id => @user
     end
 
     it "should be successful" do
-      get :show, :id => @user
       response.should be_success
     end
 
     it "should have the right title" do
-      get :show, :id => @user
       response.should have_selector("h2", :content => "User")
     end
 
     it "should find the right user" do
-      get :show, :id => @user
       assigns(:user).should == @user
+    end
+
+    it "should have the right reputation point" do
+      response.should have_selector("h3", :content => "27 Reputation")
+    end
+
+    it "should have the right reputation history" do
+      @user.reputations.each do |rep|
+        response.should have_selector("a", :content => rep.question.title)
+        response.should have_selector("td", :content => rep.point.to_s)
+        response.should have_selector("td", :content => rep.reason)
+      end
+    end
+
+    describe "when no reputations" do
+      before :each do
+        get :show, id: Factory(:user, user_name: 'newmember')
+      end
+      it "should have the right reputation point" do
+        response.should have_selector("h3", :content => "0 Reputation")
+      end
+
+      it "should have no reputation history" do
+        response.should_not have_selector("table")
+      end
     end
   end
 
