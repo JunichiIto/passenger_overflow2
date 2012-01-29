@@ -32,5 +32,36 @@ describe "Layout links" do
       response.should have_selector("a", :href => user_path(@user),
                                          :content => "Profile")
     end
+
+    it "should show welcome message" do
+      response.should have_selector("p", :content => "Welcome back")
+    end
+  end
+
+  describe "when signed out" do
+    before(:each) do
+      @user = Factory(:user)
+      visit signin_path
+      fill_in 'User name', :with => @user.user_name
+      click_button
+      visit root_path
+      click_link "Sign out"
+    end
+
+    it "should have a signin link" do
+      visit root_path
+      response.should have_selector("a", :href => signin_path,
+                                         :content => "Sign in")
+    end
+
+    it "should not have a profile link" do
+      visit root_path
+      response.should_not have_selector("a", :href => user_path(@user),
+                                         :content => "Profile")
+    end
+
+    it "should show byebye message" do
+      response.should have_selector("p", :content => "Bye")
+    end
   end
 end
