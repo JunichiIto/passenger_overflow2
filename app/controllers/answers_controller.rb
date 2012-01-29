@@ -22,5 +22,10 @@ class AnswersController < ApplicationController
   end
 
   def vote
+    answer = Answer.find params[:id]
+    current_user.vote! answer
+    flash[:success] = "Your vote has been saved!"
+    @question = answer.question
+    redirect_to @question
   end
 end

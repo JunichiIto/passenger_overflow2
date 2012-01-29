@@ -80,6 +80,39 @@ describe AnswersController do
     end
   end
 
+  describe "post 'vote'" do
+    before(:each) do
+      @user = Factory(:user)
+      @asker = Factory :user, user_name: "beginner"
+      @question = Factory :question, :user => @asker
+      @answer = Factory :answer, :question => @question, :user => @user
+      test_sign_in @asker
+    end
+
+    it "should increment votes count in answer after vote cast" do
+      lambda do
+        post 'vote', :id => @answer
+        @answer.votes.reload
+      end.should change(@answer.votes, :size).from(0).to(1)
+    end
+
+    it "should increment votes count in asker after vote cast" do
+      lambda do
+        post 'vote', :id => @answer
+      end.should change(@asker.votes, :size).by(1)
+    end
+
+    it "should redirect to the question page" do
+      post 'vote', :id => @answer
+      response.should redirect_to @question
+    end
+
+    it "should have a flash message" do
+      post 'vote', :id => @answer
+      flash[:success].should =~ /your vote has been saved/i
+    end
+  end
+
   describe "access control" do
     before(:each) do
       @user = Factory :user
