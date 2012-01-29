@@ -84,4 +84,30 @@ describe User do
       @user.answers.should == [@a2, @a1]
     end
   end
+
+  describe "vote associations" do
+    before :each do
+      @user = Factory :user
+      @asker = Factory :user, user_name: 'someone'
+      question = Factory :question, user: @asker
+      @a1 = Factory :answer, question: question, user: @user, created_at: 1.day.ago
+      @a2 = Factory :answer, question: question, user: @user, created_at: 1.hour.ago
+    end
+
+    it "should have a votes attribute" do
+      @asker.should respond_to :votes
+    end
+
+    it "should increment votes count in user after vote cast" do
+      lambda do
+        @asker.vote! @a1
+      end.should change(@asker.votes, :size).by(1)      
+    end
+
+    it "should increment votes count in answer after vote cast" do
+      lambda do
+        @asker.vote! @a1
+      end.should change(@a1.votes, :count).by(1)
+    end  
+  end
 end

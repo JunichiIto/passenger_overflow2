@@ -3,6 +3,7 @@ class User < ActiveRecord::Base
 
   has_many :questions
   has_many :answers
+  has_many :votes
 
   user_name_regex = /^[a-z0-9]+$/
   validates :user_name, 
@@ -13,5 +14,10 @@ class User < ActiveRecord::Base
 
   def self.authenticate(user_name)
     find_by_user_name user_name
+  end
+
+  def vote!(answer)
+    vote = votes.build user: self, answer: answer
+    vote.save!
   end
 end

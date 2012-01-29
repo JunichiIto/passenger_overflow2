@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120123224611) do
+ActiveRecord::Schema.define(:version => 20120129001926) do
 
   create_table "answers", :force => true do |t|
     t.text     "content"
@@ -41,5 +41,15 @@ ActiveRecord::Schema.define(:version => 20120123224611) do
   end
 
   add_index "users", ["user_name"], :name => "index_users_on_user_name", :unique => true
+
+  create_table "votes", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "answer_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "votes", ["answer_id", "created_at"], :name => "index_votes_on_answer_id_and_created_at"
+  add_index "votes", ["user_id", "created_at"], :name => "index_votes_on_user_id_and_created_at"
 
 end

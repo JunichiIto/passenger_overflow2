@@ -58,4 +58,14 @@ describe Answer do
       no_content.should_not be_valid
     end
   end
+
+  describe "vote associations" do
+    before :each do
+      @a1 = Factory :answer, question: @question, user: @user, created_at: 1.day.ago
+      @a2 = Factory :answer, question: @question, user: @user, created_at: 1.hour.ago
+    end
+    it "should have a votes attribute" do
+      Answer.new.should respond_to :votes
+    end
+  end
 end
