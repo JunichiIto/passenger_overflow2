@@ -13,8 +13,10 @@ class Question < ActiveRecord::Base
   def accept(answer)
     #TODO should use transaction??
     update_attribute :accepted_answer_id, answer.id
-    user.reputations.create reason: "accepted", point: 2, activity: answer
-    answer.user.reputations.create reason: "accept", point: 15, activity: answer
+    if answer.user != user
+      user.reputations.create reason: "accepted", point: 2, activity: answer
+      answer.user.reputations.create reason: "accept", point: 15, activity: answer
+    end
   end
 
   def accepted_answer

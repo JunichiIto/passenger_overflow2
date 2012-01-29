@@ -113,6 +113,17 @@ describe Question do
         rep.point.should == 15
         rep.user.should == @user
       end
+
+      describe "when accept myself" do
+        before :each do
+          @self_ans = Factory :answer, question: @question, user: @asker
+        end        
+        it "should not increase reputation" do
+          lambda do
+            @question.accept @self_ans
+          end.should_not change(@asker.reputations, :size)
+        end
+      end
     end
 
     describe "when accepted" do
