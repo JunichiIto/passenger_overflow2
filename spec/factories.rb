@@ -17,3 +17,16 @@ Factory.define :answer do |answer|
   answer.association :user
   answer.association :question
 end
+
+Factory.define :vote do |vote|
+  vote.association :user
+  vote.association :answer
+end
+
+Factory.define :reputation do |r|
+  r.association :activity, factory: :vote
+  r.association :user
+  r.reason "voteup"
+  r.point 10
+end
+

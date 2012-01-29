@@ -4,6 +4,7 @@ class User < ActiveRecord::Base
   has_many :questions
   has_many :answers
   has_many :votes
+  has_many :reputations
 
   user_name_regex = /^[a-z0-9]+$/
   validates :user_name, 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120129001926) do
+ActiveRecord::Schema.define(:version => 20120129064127) do
 
   create_table "answers", :force => true do |t|
     t.text     "content"
@@ -33,6 +33,18 @@ ActiveRecord::Schema.define(:version => 20120129001926) do
   end
 
   add_index "questions", ["user_id", "created_at"], :name => "index_questions_on_user_id_and_created_at"
+
+  create_table "reputations", :force => true do |t|
+    t.integer  "activity_id"
+    t.string   "activity_type"
+    t.integer  "user_id"
+    t.string   "reason"
+    t.integer  "point"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "reputations", ["user_id", "created_at"], :name => "index_reputations_on_user_id_and_created_at"
 
   create_table "users", :force => true do |t|
     t.string   "user_name"

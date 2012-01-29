@@ -91,7 +91,6 @@ describe User do
       @asker = Factory :user, user_name: 'someone'
       question = Factory :question, user: @asker
       @a1 = Factory :answer, question: question, user: @user, created_at: 1.day.ago
-      @a2 = Factory :answer, question: question, user: @user, created_at: 1.hour.ago
     end
 
     it "should have a votes attribute" do
@@ -114,6 +113,24 @@ describe User do
       @asker.already_voted?(@a1).should be_false
       @asker.vote! @a1
       @asker.already_voted?(@a1).should be_true
+    end
+  end
+
+  describe "reputation associations" do
+    before :each do
+      @user = Factory :user
+      asker = Factory :user, user_name: 'someone'
+      other = Factory :user, user_name: 'other'
+      question = Factory :question, user: asker
+      a1 = Factory :answer, question: question, user: @user
+      v1 = Factory :vote, user: asker, answer: a1
+      v2 = Factory :vote, user: other, answer: a1
+      @r1 = Factory :reputation, user: @user, activity:v1, created_at: 1.day.ago
+      @r2 = Factory :reputation, user: @user, activity:v2, created_at: 1.hour.ago
+    end    
+
+    it "should have the right reputations in the right order" do
+      @user.reputations.should == [@r2, @r1]
     end
   end
 end
