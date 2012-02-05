@@ -1,8 +1,8 @@
-#answer
+%div.nswer
   = auto_link(simple_format answer.content).html_safe
-  #createdinfo
+  %div.createdinfo
     = render_accept_section answer
     = render_model_info answer
-  #voteinfo
+  %div.voteinfo
     = render_vote_count answer
     = render_vote_link answer
