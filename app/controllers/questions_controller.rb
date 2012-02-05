@@ -1,5 +1,5 @@
 class QuestionsController < ApplicationController
-  before_filter :authenticate, :only => [:new, :create]
+  before_filter :authenticate, only: [:new, :create]
 
   def index
     @questions = Question.all
@@ -15,12 +15,12 @@ class QuestionsController < ApplicationController
   end
 
   def create
-    @question  = current_user.questions.build(params[:question])
+    @question  = current_user.questions.build params[:question]
     if @question.save
       flash[:success] = "Question created!"
       redirect_to @question
     else
-      render 'new'
+      render "new"
     end
   end
 end

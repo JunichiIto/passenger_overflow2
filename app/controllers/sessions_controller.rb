@@ -1,11 +1,12 @@
 class SessionsController < ApplicationController
   def new
   end
+
   def create
-    user = User.authenticate(params[:session][:user_name])
+    user = User.authenticate params[:session][:user_name]
     if user.nil?
       flash.now[:error] = "Invalid user name."
-      render 'new'
+      render "new"
     else
       sign_in user
       flash[:success] = "Welcome back, #{user.user_name}!"
