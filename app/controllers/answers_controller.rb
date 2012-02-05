@@ -16,21 +16,22 @@ class AnswersController < ApplicationController
   end
 
   def accept
-    answer = Answer.find params[:id]
-    @question = answer.question
-    @question.accept! answer
+    @accepted_answer = Answer.find params[:id]
+    @question = @accepted_answer.question
+    @question.accept! @accepted_answer
     respond_to do |format|
-      @accepted_answer = answer
       format.html { redirect_to @question }
       format.js
     end 
   end
 
   def vote
-    answer = Answer.find params[:id]
-    current_user.vote! answer
-    flash[:success] = "Your vote has been saved!"
-    @question = answer.question
-    redirect_to @question
+    @voted_answer = Answer.find params[:id]
+    current_user.vote! @voted_answer
+    @question = @voted_answer.question
+    respond_to do |format|
+      format.html { redirect_to @question }
+      format.js
+    end
   end
 end

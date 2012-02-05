@@ -62,20 +62,6 @@ describe AnswersController do
       third = Factory :answer, question: @question, user: @user, created_at: 1.hour.ago
     end
 
-    it "should accept an answer" do
-      question = @answer.question
-      question.accepted_answer.should be_nil
-      lambda do
-        post :accept, id: @answer
-        question.reload
-      end.should change(question, :accepted_answer).from(nil).to(@answer)
-    end
-
-    it "should redirect to the question page" do
-      post :accept, id: @answer
-      response.should redirect_to @question
-    end
-
     it "should accept an answer using Ajax" do
       question = @answer.question
       question.accepted_answer.should be_nil
@@ -96,27 +82,20 @@ describe AnswersController do
       test_sign_in @asker
     end
 
-    it "should increment votes count in answer after vote cast" do
+    it "should increment votes count in answer after vote cast using ajax" do
       lambda do
-        post :vote, id: @answer
+        xhr :post, :vote, id: @answer
+        response.should be_success
         @answer.votes.reload
       end.should change(@answer.votes, :size).from(0).to(1)
     end
 
-    it "should increment votes count in asker after vote cast" do
+    it "should increment votes count in asker after vote cast using ajax" do
       lambda do
-        post :vote, id: @answer
+        xhr :post, :vote, id: @answer
+        response.should be_success
+        @answer.votes.reload
       end.should change(@asker.votes, :size).by(1)
-    end
-
-    it "should redirect to the question page" do
-      post :vote, id: @answer
-      response.should redirect_to @question
-    end
-
-    it "should have a flash message" do
-      post :vote, id: @answer
-      flash[:success].should =~ /your vote has been saved/i
     end
   end
 
