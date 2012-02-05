@@ -11,13 +11,15 @@ describe Vote do
   describe "validations" do
     before :each do
       @user = Factory :user
-      @asker = Factory :user, user_name: 'someone'
+      @asker = Factory :user, user_name: "someone"
       question = Factory :question, user: @asker
       @answer = Factory :answer, question: question, user: @user, created_at: 1.day.ago
     end
+
     it "should require a user id" do
       Vote.new(answer: @answer).should_not be_valid
     end
+
     it "should require an answer id" do
       Vote.new(user: @asker).should_not be_valid
     end

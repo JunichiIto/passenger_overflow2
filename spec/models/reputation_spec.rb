@@ -12,10 +12,12 @@ describe Reputation do
                    activity_type: "Vote", 
                    reason: "upvote", 
                    point: 10 }
+
     @accept_attr = { activity_id: @answer,
                      activity_type: "Answer", 
                      reason: "accept", 
                      point: 15 }
+
     @accepted_attr = { activity_id: @answer,
                        activity_type: "Answer", 
                        reason: "accepted", 
@@ -28,7 +30,7 @@ describe Reputation do
     end
 
     it "should have a user attribute" do
-      @reputation.should respond_to(:user)
+      @reputation.should respond_to :user
     end
 
     it "should have the right associated user" do

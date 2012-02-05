@@ -2,8 +2,8 @@
 require 'spec_helper'
 
 describe User do
-  before(:each) do
-    @attr = { :user_name => "junichiito" }
+  before :each do
+    @attr = { user_name: "junichiito" }
   end
 
   it "should create a new instance given valid attributes" do
@@ -17,21 +17,21 @@ describe User do
 
   it "should reject user_names that are too long" do
     long_name = "a" * 21
-    long_name_user = User.new(@attr.merge(:user_name => long_name))
+    long_name_user = User.new @attr.merge user_name: long_name
     long_name_user.should_not be_valid
   end
 
   it "should reject invalid user_names" do
-    names = ['UpperCase', 'Include Space', 'にほんご', 'symbol#$%etc']
+    names = ["UpperCase", "Include Space", "にほんご", 'symbol#$%etc']
     names.each do |name|
-      invalid_user_name_user = User.new(@attr.merge(:user_name => name))
+      invalid_user_name_user = User.new @attr.merge user_name: name
       invalid_user_name_user.should_not be_valid
     end
   end
 
   it "should reject duplicate user_names" do
     User.create! @attr
-    user_with_duplicate_email = User.new(@attr)
+    user_with_duplicate_email = User.new @attr
     user_with_duplicate_email.should_not be_valid
   end
 
@@ -41,12 +41,12 @@ describe User do
     end
 
     it "should return the user on match" do
-      matching_user = User.authenticate(@attr[:user_name])
+      matching_user = User.authenticate @attr[:user_name]
       matching_user.should == @user
     end
 
     it "should return nil on unmatch" do
-      matching_user = User.authenticate('foobar')
+      matching_user = User.authenticate "foobar"
       matching_user.should be_nil
     end
   end
@@ -54,8 +54,8 @@ describe User do
   describe "question associations" do
     before :each do
       @user = User.create! @attr
-      @q1 = Factory :question, :user => @user, :created_at => 1.day.ago
-      @q2 = Factory :question, :user => @user, :created_at => 1.hour.ago
+      @q1 = Factory :question, user: @user, created_at: 1.day.ago
+      @q2 = Factory :question, user: @user, created_at: 1.hour.ago
     end
 
     it "should have a questions attribute" do
@@ -70,7 +70,7 @@ describe User do
   describe "answer associations" do
     before :each do
       @user = Factory :user
-      asker = Factory :user, user_name: 'someone'
+      asker = Factory :user, user_name: "someone"
       question = Factory :question, user: asker
       @a1 = Factory :answer, question: question, user: @user, created_at: 1.day.ago
       @a2 = Factory :answer, question: question, user: @user, created_at: 1.hour.ago
@@ -88,7 +88,7 @@ describe User do
   describe "vote associations" do
     before :each do
       @user = Factory :user
-      @asker = Factory :user, user_name: 'someone'
+      @asker = Factory :user, user_name: "someone"
       question = Factory :question, user: @asker
       @a1 = Factory :answer, question: question, user: @user, created_at: 1.day.ago
     end
@@ -133,8 +133,8 @@ describe User do
   describe "reputation associations" do
     before :each do
       @user = Factory :user
-      asker = Factory :user, user_name: 'someone'
-      other = Factory :user, user_name: 'other'
+      asker = Factory :user, user_name: "someone"
+      other = Factory :user, user_name: "other"
       question = Factory :question, user: asker
       a1 = Factory :answer, question: question, user: @user
       v1 = Factory :vote, user: asker, answer: a1
@@ -151,8 +151,8 @@ describe User do
   describe "reputation points" do
     before :each do
       @user = Factory :user
-      asker = Factory :user, user_name: 'someone'
-      other = Factory :user, user_name: 'other'
+      asker = Factory :user, user_name: "someone"
+      other = Factory :user, user_name: "other"
       question = Factory :question, user: asker
       a1 = Factory :answer, question: question, user: @user
       v1 = Factory :vote, user: asker, answer: a1

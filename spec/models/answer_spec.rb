@@ -3,8 +3,8 @@ require 'spec_helper'
 describe Answer do
   before :each do
     @user = Factory :user 
-    @asker = Factory :user, :user_name => 'someone'
-    @question = Factory :question, :user => @asker
+    @asker = Factory :user, user_name: "someone"
+    @question = Factory :question, user: @asker
   end
 
   it "should create a new instance given valid attributes" do
@@ -15,7 +15,7 @@ describe Answer do
 
   describe "user associations" do
     before :each do
-      @answer = Factory :answer, :user => @user, :question => @question
+      @answer = Factory :answer, user: @user, question: @question
     end
 
     it "should have the right associated user" do
@@ -43,18 +43,17 @@ describe Answer do
     end
 
     it "should require a user id" do
-      no_user = Answer.new(@attr.merge(user: nil))
+      no_user = Answer.new @attr.merge user: nil
       no_user.should_not be_valid
     end
 
     it "should require a question id" do
-      no_question = Answer.new(@attr.merge(quetion: nil))
+      no_question = Answer.new @attr.merge quetion: nil
       no_question.should_not be_valid
     end
 
     it "should require nonblank content" do
-      #@user.microposts.build(:content => "  ").should_not be_valid
-      no_content = Answer.new(@attr.merge(content: "  "))
+      no_content = Answer.new @attr.merge content: "  "
       no_content.should_not be_valid
     end
   end

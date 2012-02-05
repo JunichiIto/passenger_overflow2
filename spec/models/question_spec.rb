@@ -4,14 +4,14 @@ describe Question do
   before :each do
     @user = Factory :user
     @attr = {
-      :title => "value for title",
-      :content => "value for content"
+      title: "value for title",
+      content: "value for content"
     }
   end
 
   describe "user associations" do
-    before(:each) do
-      @question = @user.questions.create(@attr)
+    before :each do
+      @question = @user.questions.create @attr
     end
 
     it "should have a user attribute" do
@@ -30,28 +30,28 @@ describe Question do
     end
 
     it "should require nonblank title" do
-      @user.questions.build(:title => "  ").should_not be_valid
+      @user.questions.build(title: "  ").should_not be_valid
     end
 
     it "should reject long title" do
-      @user.questions.build(:title => "a" * 256).should_not be_valid
+      @user.questions.build(title: "a" * 256).should_not be_valid
     end
 
     it "should require nonblank content" do
-      @user.questions.build(:content => "  ").should_not be_valid
+      @user.questions.build(content: "  ").should_not be_valid
     end
   end
 
   describe "answer associations" do
-    before(:each) do
-      asker = Factory :user, user_name: 'someone'
+    before :each do
+      asker = Factory :user, user_name: "someone"
       @question = Factory :question, user: asker
       @a1 = Factory :answer, question: @question, user: @user, created_at: 1.day.ago
       @a2 = Factory :answer, question: @question, user: @user, created_at: 1.hour.ago
     end
 
     it "should have a answers attribute" do
-      @question.should respond_to(:answers)
+      @question.should respond_to :answers
     end
 
     it "should have the right answers in the right order" do
@@ -60,15 +60,15 @@ describe Question do
   end
 
   describe "accepted answer associations" do
-    before(:each) do
-      @asker = Factory :user, user_name: 'someone'
+    before :each do
+      @asker = Factory :user, user_name: "someone"
       @question = Factory :question, user: @asker
       @a1 = Factory :answer, question: @question, user: @user, created_at: 1.day.ago
       @a2 = Factory :answer, question: @question, user: @user, created_at: 1.hour.ago
     end
 
     it "should have an accept attribute" do
-      @question.should respond_to(:accept!)
+      @question.should respond_to :accept!
     end
 
     it "should accept an answer" do
@@ -78,7 +78,7 @@ describe Question do
     end
     
     it "should have an accepted? attribute" do
-      @question.should respond_to(:accepted?)
+      @question.should respond_to :accepted?
     end
 
     describe "reputation on asker" do
