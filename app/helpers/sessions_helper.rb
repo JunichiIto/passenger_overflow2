@@ -32,12 +32,12 @@ module SessionsHelper
 
   def deny_access
     store_location
-    redirect_to signin_path, :notice => "Please sign in to access this page."
+    redirect_to signin_path, notice: "Please sign in to access this page."
   end
 
   private
     def user_from_remember_token
-      User.authenticate(*remember_token)
+      User.authenticate *remember_token
     end
 
     def remember_token
