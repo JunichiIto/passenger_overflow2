@@ -1,15 +1,14 @@
-<h2>User</h2>
-<p class="username"><%= @user.user_name %></p>
+<h2><%= @user.user_name %></h2>
 <%= content_tag "h3", "#{@user.reputation_point} Reputation" %>
 <% if !@user.reputations.empty? %>
   <table border="0" class="rephist">
-  <% @user.reputations.each do |rep| %>
-    <tr>
-      <td><%= "+" + rep.point.to_s %></td>
-      <td><%= rep.created_at %></td>
-      <td><%= rep.reason %></td>
-      <td><%= link_to rep.question.title, question_path(rep.question) %></td>
-    </tr>
-  <% end %>
+    <% @user.reputations.each do |rep| %>
+      <tr>
+        <td><%= "+" + rep.point.to_s %></td>
+        <td><%= rep.created_at %></td>
+        <td><%= rep.reason %></td>
+        <td><%= link_to rep.question.title, question_path(rep.question) %></td>
+      </tr>
+    <% end %>
+  </table>
 <% end %>
-</table>

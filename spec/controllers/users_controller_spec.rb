@@ -56,7 +56,7 @@ describe UsersController do
     end
 
     it "should have the right title" do
-      response.should have_selector "h2", content: "User"
+      response.should have_selector "h2", content: @user.user_name
     end
 
     it "should find the right user" do
