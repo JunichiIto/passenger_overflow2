@@ -22,15 +22,15 @@ module AnswersHelper
     content_tag :span, "Accepted", class: "accepted"
   end
 
-  def render_vote_section(answer)
+  def render_vote_count(answer)
     if signed_in? && current_user.already_voted?(answer)
       content_tag :span, pluralize(answer.votes.count, "vote"), class: "voted"
     else
-      tag = content_tag :span, pluralize(answer.votes.count, "vote")
-      if signed_in? && answer.user != current_user
-        tag += link_to "Vote+", vote_answer_path(answer), method: :post, class: "vote"
-      end
-      tag
+      content_tag :span, pluralize(answer.votes.count, "vote")
     end
+  end    
+  
+  def can_vote?(answer)
+    signed_in? && !current_user.already_voted?(answer) && answer.user != current_user
   end
 end

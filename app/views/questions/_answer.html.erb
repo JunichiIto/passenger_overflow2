@@ -8,6 +8,9 @@
     ]
   </div>
   <div class="voteinfo">
-    <%= render_vote_section answer %>
+    <%= render_vote_count answer %>
+    <% if can_vote? answer %>
+      <%= link_to "Vote+", vote_answer_path(answer), method: :post, class: "vote" %>
+    <% end %>
   </div>
 </div>
