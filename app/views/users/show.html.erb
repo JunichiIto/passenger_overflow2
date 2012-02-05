@@ -1,5 +1,5 @@
 <h2><%= @user.user_name %></h2>
-<%= content_tag "h3", "#{@user.reputation_point} Reputation" %>
+<%= content_tag :h3, "#{@user.reputation_point} Reputation" %>
 <% if !@user.reputations.empty? %>
   <table border="0" class="rephist">
     <% @user.reputations.each do |rep| %>
