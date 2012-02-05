@@ -40,13 +40,13 @@ describe UsersController do
       v1 = Factory :vote, user: asker, answer: a1
 
       #user answers a question and is accepted and voted
-      question.accept a1
+      question.accept! a1
       other.vote! a1
 
       #user asks a question and accept answer
       my_question = Factory :question, user: @user
       ans_to_my_question = Factory :answer, question: my_question, user: other
-      my_question.accept ans_to_my_question
+      my_question.accept! ans_to_my_question
 
       get :show, :id => @user
     end

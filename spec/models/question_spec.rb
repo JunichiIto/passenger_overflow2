@@ -68,13 +68,13 @@ describe Question do
     end
 
     it "should have an accept attribute" do
-      @question.should respond_to(:accept)
+      @question.should respond_to(:accept!)
     end
 
     it "should accept an answer" do
-      @question.accept @a2
-      @question.accepted_answer.should == @a2
+      @question.accept! @a2
       @question.accepted_answer_id.should == @a2.id
+      @question.accepted_answer.should == @a2
     end
     
     it "should have an accepted? attribute" do
@@ -84,12 +84,12 @@ describe Question do
     describe "reputation on asker" do
       it "should increase asker's reputation" do
         lambda do
-          @question.accept @a2
+          @question.accept! @a2
         end.should change(@asker.reputations, :size).from(0).to(1)
       end
 
       it "should add the right reputation" do
-        @question.accept @a2
+        @question.accept! @a2
         rep = @asker.reputations.pop
         rep.activity.should == @a2
         rep.reason.should == "accepted"
@@ -101,12 +101,12 @@ describe Question do
     describe "reputation on teacher" do
       it "should increase teacher's reputation" do
         lambda do
-          @question.accept @a2
+          @question.accept! @a2
         end.should change(@user.reputations, :size).from(0).to(1)
       end
 
       it "should add the right reputation" do
-        @question.accept @a2
+        @question.accept! @a2
         rep = @user.reputations.pop
         rep.activity.should == @a2
         rep.reason.should == "accept"
@@ -120,7 +120,7 @@ describe Question do
         end        
         it "should not increase reputation" do
           lambda do
-            @question.accept @self_ans
+            @question.accept! @self_ans
           end.should_not change(@asker.reputations, :size)
         end
       end
@@ -128,7 +128,7 @@ describe Question do
 
     describe "when accepted" do
       before :each do
-        @question.accept @a2
+        @question.accept! @a2
       end
 
       it "should be accepted" do

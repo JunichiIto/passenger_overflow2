@@ -3,6 +3,7 @@ class Question < ActiveRecord::Base
 
   belongs_to :user
   has_many :answers
+  belongs_to :accepted_answer, class_name: "Answer"
 
   validates :title, :presence => true, :length => { :maximum => 255 }
   validates :content, :presence => true
@@ -10,20 +11,17 @@ class Question < ActiveRecord::Base
 
   default_scope :order => 'questions.created_at DESC'
 
-  def accept(answer)
+  def accept!(answer)
     #TODO should use transaction??
-    update_attribute :accepted_answer_id, answer.id
+    self.accepted_answer = answer
+    save!
     if answer.user != user
-      user.reputations.create reason: "accepted", point: 2, activity: answer
-      answer.user.reputations.create reason: "accept", point: 15, activity: answer
+      user.reputations.create! reason: "accepted", point: 2, activity: answer
+      answer.user.reputations.create! reason: "accept", point: 15, activity: answer
     end
   end
 
-  def accepted_answer
-    Answer.find_by_id accepted_answer_id
-  end
-
   def accepted?
-    accepted_answer_id
+    accepted_answer
   end
 end
