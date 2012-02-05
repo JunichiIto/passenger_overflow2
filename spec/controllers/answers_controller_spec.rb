@@ -76,9 +76,24 @@ describe AnswersController do
       response.should redirect_to @question
     end
 
-    it "should have a flash message" do
-      post :accept, id: @answer
-      flash[:success].should =~ /answer has been accepted/i
+    #it "should have a flash message" do
+    #  post :accept, id: @answer
+    #  flash[:success].should =~ /answer has been accepted/i
+    #end
+
+    it "should accept an answer using Ajax" do
+      question = @answer.question
+      question.accepted_answer.should be_nil
+      #lambda do
+      #  post :accept, id: @answer
+      #  question.reload
+      #end.should change(question, :accepted_answer).from(nil).to(@answer)
+
+      lambda do
+        xhr :post, :accept, id: @answer
+        response.should be_success
+        question.reload
+      end.should change(question, :accepted_answer).from(nil).to(@answer)
     end
   end
 

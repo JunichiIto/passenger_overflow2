@@ -5,9 +5,16 @@
       <% if @question.accepted_answer_id == answer.id %>
         <span class="accepted">Accepted</span>
       <% end %>
-    <% else %>
+   <% else %>
       <% if current_user == @question.user %>
-        <%= link_to "Accept", accept_answer_path(answer), { method: :post } %>
+        <span id="<%= "accept#{answer.id}" %>">
+        <%= link_to "Accept", 
+                    accept_answer_path(answer), 
+                    method: :post, 
+                    remote: true, 
+                    style: "display:inline;", 
+                    id: "accept#{answer.id}" %>
+        </span>
       <% end %>
     <% end %>
     [
@@ -17,11 +24,11 @@
   </div>
   <div class="voteinfo">
     <% if signed_in? && current_user.already_voted?(answer) %>
-      <%= content_tag "span", pluralize(answer.votes.count, "vote"), { class: "voted" } %>
+      <%= content_tag "span", pluralize(answer.votes.count, "vote"), class: "voted" %>
     <% else %>
       <%= content_tag "span", pluralize(answer.votes.count, "vote") %>
       <% if signed_in? && answer.user != current_user %>
-        <%= link_to "Vote+", vote_answer_path(answer), { method: :post, class: "vote" } %>
+        <%= link_to "Vote+", vote_answer_path(answer), method: :post, class: "vote" %>
       <% end %>
     <% end %>
   </div>

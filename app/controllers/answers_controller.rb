@@ -19,8 +19,13 @@ class AnswersController < ApplicationController
     answer = Answer.find params[:id]
     @question = answer.question
     @question.accept! answer
-    flash[:success] = "Answer has been accepted!"
-    redirect_to @question
+    #flash[:success] = "Answer has been accepted!"
+    #redirect_to @question
+    respond_to do |format|
+      @accepted_answer = answer
+      format.html { redirect_to @question }
+      format.js
+    end 
   end
 
   def vote
