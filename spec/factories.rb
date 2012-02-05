@@ -29,4 +29,3 @@ Factory.define :reputation do |r|
   r.reason "voteup"
   r.point 10
 end
-
