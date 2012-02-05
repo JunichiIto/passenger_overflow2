@@ -1,4 +1,5 @@
-require 'spec_helper'
+#require 'spec_helper'
+require File.expand_path(File.dirname(__FILE__)) + '/../spec_helper' 
 
 describe QuestionsController do
   render_views
@@ -209,6 +210,10 @@ describe QuestionsController do
   end
 
   describe "access control" do
+    before :each do
+      test_sign_out
+    end
+
     it "should deny access to 'create'" do
       get :new
       response.should redirect_to(signin_path)

@@ -119,6 +119,7 @@ describe AnswersController do
       @asker = Factory :user, user_name: "beginner"
       @question = Factory :question, :user => @asker
       @answer = Factory :answer, :question => @question, :user => @user
+      test_sign_out
     end
 
     it "should deny access to 'create'" do

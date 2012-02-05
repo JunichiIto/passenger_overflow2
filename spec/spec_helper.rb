@@ -1,3 +1,6 @@
+require 'simplecov'
+SimpleCov.start 'rails'
+
 require 'rubygems'
 require 'spork'
 
@@ -96,6 +99,10 @@ RSpec.configure do |config|
 
   def test_sign_in(user)
     controller.sign_in(user)
+  end
+
+  def test_sign_out
+    controller.sign_out
   end
 
   def current_user
