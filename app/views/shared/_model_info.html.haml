@@ -1,2 +1,1 @@
-- user = model.user
-= "[ #{model.created_at.to_s} #{link_to(user.user_name, user)} #{user.reputation_point.to_s} ]".html_safe
+= "[ #{model.created_at.to_s} #{render "shared/user_info", user: model.user} ]".html_safe

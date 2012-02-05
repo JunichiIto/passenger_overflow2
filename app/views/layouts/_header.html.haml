@@ -1,9 +1,7 @@
 %h1= link_to "Passenger Overflow", root_path
 - if signed_in?
   %p
-    Current User:
-    \#{link_to current_user.user_name, current_user}
-    \#{current_user.reputation_point}
+    Current User: #{render "shared/user_info", user: current_user}
 %nav
   %ul
     %li= link_to "Ask Question", new_question_path
