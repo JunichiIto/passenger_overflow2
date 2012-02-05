@@ -17,9 +17,11 @@ class User < ActiveRecord::Base
   end
 
   def vote!(answer)
-    #TODO should use transaction??
-    vote = votes.create user: self, answer: answer
-    answer.user.reputations.create activity: vote, reason: "upvote", point: 10
+    vote = votes.build user: self, answer: answer
+    ActiveRecord::Base.transaction do
+      vote.save!
+      answer.user.reputations.create! activity: vote, reason: "upvote", point: 10
+    end
     vote
   end
   

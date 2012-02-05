@@ -12,12 +12,13 @@ class Question < ActiveRecord::Base
   default_scope order: "questions.created_at DESC"
 
   def accept!(answer)
-    #TODO should use transaction??
     self.accepted_answer = answer
-    save!
-    if answer.user != user
-      user.reputations.create! reason: "accepted", point: 2, activity: answer
-      answer.user.reputations.create! reason: "accept", point: 15, activity: answer
+    ActiveRecord::Base.transaction do
+      save!
+      if answer.user != user
+        user.reputations.create! reason: "accepted", point: 2, activity: answer
+        answer.user.reputations.create! reason: "accept", point: 15, activity: answer
+      end
     end
   end
 
