@@ -6,12 +6,11 @@ module AnswersHelper
       end
     else
       if current_user == @question.user
-        content_tag :span, id="accept#{answer.id}" do
+        content_tag :span, id: "accept#{answer.id}" do
           link_to "Accept", 
                   accept_answer_path(answer), 
                   method: :post, 
-                  remote: true, 
-                  id: "accept#{answer.id}"
+                  remote: true
         end
       end
     end
