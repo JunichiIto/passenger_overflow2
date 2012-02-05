@@ -4,10 +4,9 @@
     Current User: #{render "shared/user_info", user: current_user}
 %nav
   %ul
+    %li= link_to "Questions", questions_path
     %li= link_to "Ask Question", new_question_path
     %li= link_to "Users", users_path
-    - if signed_in?
-      %li= link_to "Profile", current_user
     - if signed_in?
       %li= link_to "Sign out", signout_path, method: :delete
     - else

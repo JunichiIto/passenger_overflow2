@@ -11,6 +11,18 @@ describe "Layout links" do
       response.should have_selector("a", href: new_question_path,
                                          content: "Ask Question")
     end
+
+    it "should have a questions link" do
+      visit root_path
+      response.should have_selector("a", href: questions_path,
+                                         content: "Questions")
+    end
+
+    it "should have a users link" do
+      visit root_path
+      response.should have_selector("a", href: users_path,
+                                         content: "Users")
+    end
   end
 
   describe "when signed in" do
@@ -25,12 +37,6 @@ describe "Layout links" do
       visit root_path
       response.should have_selector("a", href: signout_path,
                                          content: "Sign out")
-    end
-
-    it "should have a profile link" do
-      visit root_path
-      response.should have_selector("a", href: user_path(@user),
-                                         content: "Profile")
     end
 
     it "should show welcome message" do
@@ -52,12 +58,6 @@ describe "Layout links" do
       visit root_path
       response.should have_selector("a", href: signin_path,
                                          content: "Sign in")
-    end
-
-    it "should not have a profile link" do
-      visit root_path
-      response.should_not have_selector("a", href: user_path(@user),
-                                         content: "Profile")
     end
 
     it "should show byebye message" do
