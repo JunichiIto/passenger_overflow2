@@ -6,12 +6,11 @@ class User < ActiveRecord::Base
   has_many :votes
   has_many :reputations
 
-  user_name_regex = /^[a-z0-9]+$/
   validates :user_name, 
-            :presence => true, 
-            :length => { :maximum => 20 },
-            :format => { :with => user_name_regex },
-            :uniqueness => true
+            presence: true, 
+            length: { maximum: 20 },
+            format: { with: /^[a-z0-9]+$/ },
+            uniqueness: true
 
   def self.authenticate(user_name)
     find_by_user_name user_name

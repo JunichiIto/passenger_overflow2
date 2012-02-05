@@ -5,11 +5,11 @@ class Question < ActiveRecord::Base
   has_many :answers
   belongs_to :accepted_answer, class_name: "Answer"
 
-  validates :title, :presence => true, :length => { :maximum => 255 }
-  validates :content, :presence => true
-  validates :user_id, :presence => true
+  validates :title, presence: true, length: { maximum: 255 }
+  validates :content, presence: true
+  validates :user_id, presence: true
 
-  default_scope :order => 'questions.created_at DESC'
+  default_scope order: "questions.created_at DESC"
 
   def accept!(answer)
     #TODO should use transaction??
