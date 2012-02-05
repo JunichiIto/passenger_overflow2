@@ -11,10 +11,7 @@
         <% else %>
           <%= pluralize(question.answers.count, "Answer") %>
         <% end %>
-        [
-        <%= question.created_at.to_s :default %>
-        <%= render_user question.user %>
-        ]
+        <%= render_model_info question %>
       </div>
     </p>
   <% end %>

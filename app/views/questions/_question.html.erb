@@ -4,10 +4,7 @@
     <%= simple_format @question.content %>
   </div>
   <div class="createdinfo">
-    [
-    <%= @question.created_at.to_s %>
-    <%= render_user @question.user %>
-    ]
+    <%= render_model_info @question %>
   </div>
 </div>
 

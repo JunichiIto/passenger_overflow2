@@ -2,10 +2,7 @@
   <%= simple_format answer.content %>
   <div class="createdinfo">
     <%= render_accept_section answer %>
-    [
-    <%= answer.created_at.to_s %>
-    <%= render_user answer.user %>
-    ]
+    <%= render_model_info answer %>
   </div>
   <div class="voteinfo">
     <%= render_vote_count answer %>
