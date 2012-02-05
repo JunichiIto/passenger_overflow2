@@ -1,0 +1,28 @@
+<div class="answer">
+  <%= simple_format answer.content %>
+  <div class="createdinfo">
+    <% if @question.accepted? %>
+      <% if @question.accepted_answer_id == answer.id %>
+        <span class="accepted">Accepted</span>
+      <% end %>
+    <% else %>
+      <% if current_user == @question.user %>
+        <%= link_to "Accept", accept_answer_path(answer), { method: :post } %>
+      <% end %>
+    <% end %>
+    [
+    <%= answer.created_at.to_s %>
+    <%= render_user answer.user %>
+    ]
+  </div>
+  <div class="voteinfo">
+    <% if signed_in? && current_user.already_voted?(answer) %>
+      <%= content_tag "span", pluralize(answer.votes.count, "vote"), { class: "voted" } %>
+    <% else %>
+      <%= content_tag "span", pluralize(answer.votes.count, "vote") %>
+      <% if signed_in? && answer.user != current_user %>
+        <%= link_to "Vote+", vote_answer_path(answer), { method: :post, class: "vote" } %>
+      <% end %>
+    <% end %>
+  </div>
+</div>

@@ -1,0 +1,13 @@
+<h2><%= @question.title %></h2>
+<div class="question">
+  <div class="content">
+    <%= simple_format @question.content %>
+  </div>
+  <div class="createdinfo">
+    [
+    <%= @question.created_at.to_s %>
+    <%= render_user @question.user %>
+    ]
+  </div>
+</div>
+
