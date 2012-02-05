@@ -1,0 +1,7 @@
+- if can_vote? answer
+  = content_tag :span, id: "votelink#{answer.id}" do
+    = link_to "Vote+",                  |   
+              vote_answer_path(answer), | 
+              method: :post,            |  
+              class: "vote",            | 
+              remote: true              |    

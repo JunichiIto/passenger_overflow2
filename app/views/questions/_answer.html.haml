@@ -1,8 +1,8 @@
 %div.answer
   = auto_link(simple_format answer.content).html_safe
   %div.createdinfo
-    = render_accept_section answer
-    = render_model_info answer
+    = render "questions/accept_section", answer: answer
+    = render "shared/model_info", model: answer
   %div.voteinfo
-    = render_vote_count answer
-    = render_vote_link answer
+    = render "questions/vote_count", answer: answer
+    = render "questions/vote_link", answer: answer

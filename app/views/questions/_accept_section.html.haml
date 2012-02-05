@@ -1,0 +1,10 @@
+- if @question.accepted?
+  - if @question.accepted_answer_id == answer.id
+    = render "questions/accepted"
+- else
+  - if current_user == @question.user
+    = content_tag :span, id: "accept#{answer.id}" do
+      = link_to "Accept",                   |  
+                accept_answer_path(answer), | 
+                method: :post,              | 
+                remote: true                | 

@@ -5,5 +5,5 @@
       .title
         = link_to question.title, question
       .createdinfo
-        = render_answer_count question
-        = render_model_info question
+        = render "questions/answer_count", question: question
+        = render "shared/model_info", model: question
