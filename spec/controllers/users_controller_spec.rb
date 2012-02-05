@@ -4,7 +4,7 @@ describe UsersController do
   render_views
 
   describe "GET 'index'" do
-    before :each do
+    before do
       @user = Factory :user
       second = Factory :user, user_name: "tanakagonzo"
       third  = Factory :user, user_name: "satonenpei"
@@ -31,7 +31,7 @@ describe UsersController do
   end
 
   describe "GET 'show'" do
-    before :each do
+    before do
       @user = Factory :user
       asker = Factory :user, user_name: "someone"
       other = Factory :user, user_name: "other"
@@ -76,7 +76,7 @@ describe UsersController do
     end
 
     describe "when no reputations" do
-      before :each do
+      before do
         get :show, id: Factory(:user, user_name: "newmember")
       end
 
@@ -104,7 +104,7 @@ describe UsersController do
 
   describe "POST 'create'" do
     describe "failure" do
-      before :each do
+      before do
         @attr = { user_name: "" }
       end
 
@@ -121,7 +121,7 @@ describe UsersController do
     end
 
     describe "success" do
-      before :each do
+      before do
         @attr = { user_name: "junichiito" } 
       end
 

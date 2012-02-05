@@ -4,7 +4,7 @@ describe QuestionsController do
   render_views
 
   describe "GET 'index'" do
-    before :each do
+    before do
       @user = Factory :user
       @question = Factory :question, user: @user
       second = Factory :question, user: @user, created_at: 1.day.ago
@@ -31,7 +31,7 @@ describe QuestionsController do
     end
 
     describe "when an answer is accepted" do
-      before :each do
+      before do
         @answer = Factory :answer, question: @question, user: @user
         @question.accept! @answer
       end
@@ -44,7 +44,7 @@ describe QuestionsController do
   end
 
   describe "GET 'show'" do
-    before :each do
+    before do
       @asker = Factory :user, user_name: "beginner"
       @question = Factory :question, user: @asker
       @user = Factory :user
@@ -85,7 +85,7 @@ describe QuestionsController do
     end
     
     describe "when signed in" do
-      before :each do
+      before do
         test_sign_in @user
       end
       
@@ -97,7 +97,7 @@ describe QuestionsController do
     
     describe "accept links" do
       describe "when asker signed in" do
-        before :each do
+        before do
           test_sign_in @asker
         end
       
@@ -110,7 +110,7 @@ describe QuestionsController do
       end
 
       describe "when other signed in" do
-        before :each do
+        before do
           test_sign_in @user
         end
       
@@ -128,7 +128,7 @@ describe QuestionsController do
       end
 
       describe "already accepted" do
-        before :each do
+        before do
           test_sign_in @asker
           @question.accept! @answer
         end
@@ -150,13 +150,13 @@ describe QuestionsController do
     end
 
     describe "vote links" do
-      before :each do
+      before do
         other = Factory :user, user_name: "someone"
         forth = Factory :answer, question: @question, user: other
       end
 
       describe "when asker logged in" do
-        before :each do
+        before do
           test_sign_in @asker
         end
 
@@ -168,7 +168,7 @@ describe QuestionsController do
         end
 
         describe "and answer already voted" do
-          before :each do
+          before do
             @asker.vote! @answer
           end
 
@@ -185,7 +185,7 @@ describe QuestionsController do
       end
 
       describe "when teacher logged in" do
-        before :each do
+        before do
           test_sign_in @user
         end
 
@@ -203,7 +203,7 @@ describe QuestionsController do
       end
 
       describe "when already voted" do
-        before :each do
+        before do
           @asker.vote! @answer
         end
 
@@ -217,7 +217,7 @@ describe QuestionsController do
   end
 
   describe "access control" do
-    before :each do
+    before do
       test_sign_out
     end
 
@@ -233,7 +233,7 @@ describe QuestionsController do
   end
 
   describe "GET 'new'" do
-    before :each do
+    before do
       @user = Factory :user
       test_sign_in @user
     end
@@ -250,13 +250,13 @@ describe QuestionsController do
   end
 
   describe "POST 'create'" do
-    before :each do
+    before do
       @user = Factory :user
       test_sign_in @user
     end
 
     describe "failure" do
-      before :each do
+      before do
         @attr = { title: "", content: "" }
       end
 
@@ -273,7 +273,7 @@ describe QuestionsController do
     end
 
     describe "success" do
-      before :each do
+      before do
         @attr = { title: "valid title", content: "Hello there!" }
       end
 

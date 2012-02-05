@@ -9,7 +9,7 @@ describe Vote do
   end
   
   describe "validations" do
-    before :each do
+    before do
       @user = Factory :user
       @asker = Factory :user, user_name: "someone"
       question = Factory :question, user: @asker

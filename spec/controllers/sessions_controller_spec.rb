@@ -17,7 +17,7 @@ describe SessionsController do
 
   describe "POST 'create'" do
     describe "invalid signin" do
-      before :each do
+      before do
         @attr = { user_name: "foobar" }
       end
 
@@ -38,7 +38,7 @@ describe SessionsController do
     end
 
     describe "with valid user_name" do
-      before :each do
+      before do
         @user = Factory :user
         @attr = { user_name: @user.user_name }
       end

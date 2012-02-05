@@ -2,7 +2,7 @@
 require 'spec_helper'
 
 describe User do
-  before :each do
+  before do
     @attr = { user_name: "junichiito" }
   end
 
@@ -36,7 +36,7 @@ describe User do
   end
 
   describe "authenticate method" do
-    before :each do
+    before do
       @user = User.create! @attr
     end
 
@@ -52,7 +52,7 @@ describe User do
   end
 
   describe "question associations" do
-    before :each do
+    before do
       @user = User.create! @attr
       @q1 = Factory :question, user: @user, created_at: 1.day.ago
       @q2 = Factory :question, user: @user, created_at: 1.hour.ago
@@ -68,7 +68,7 @@ describe User do
   end
 
   describe "answer associations" do
-    before :each do
+    before do
       @user = Factory :user
       asker = Factory :user, user_name: "someone"
       question = Factory :question, user: asker
@@ -86,7 +86,7 @@ describe User do
   end
 
   describe "vote associations" do
-    before :each do
+    before do
       @user = Factory :user
       @asker = Factory :user, user_name: "someone"
       question = Factory :question, user: @asker
@@ -131,7 +131,7 @@ describe User do
   end
 
   describe "reputation associations" do
-    before :each do
+    before do
       @user = Factory :user
       asker = Factory :user, user_name: "someone"
       other = Factory :user, user_name: "other"
@@ -149,7 +149,7 @@ describe User do
   end
 
   describe "reputation points" do
-    before :each do
+    before do
       @user = Factory :user
       asker = Factory :user, user_name: "someone"
       other = Factory :user, user_name: "other"

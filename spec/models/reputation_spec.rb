@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Reputation do
-  before :each do
+  before do
     @asker = Factory :user
     @question = Factory :question, user: @asker
     @teacher = Factory :user, user_name: "hacker"
@@ -25,7 +25,7 @@ describe Reputation do
   end  
 
   describe "user associations" do
-    before :each do
+    before do
       @reputation = @teacher.reputations.create @vote_attr
     end
 
@@ -40,7 +40,7 @@ describe Reputation do
   end
 
   describe "vote associations" do
-    before :each do
+    before do
       @reputation = @teacher.reputations.create @vote_attr
     end
 
@@ -55,7 +55,7 @@ describe Reputation do
   end
 
   describe "accept associations" do
-    before :each do
+    before do
       @reputation = @teacher.reputations.create @accept_attr
     end
 
@@ -70,7 +70,7 @@ describe Reputation do
   end
 
   describe "accepted associations" do
-    before :each do
+    before do
       @reputation = @teacher.reputations.create @accepted_attr
     end
 

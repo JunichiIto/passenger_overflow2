@@ -14,7 +14,7 @@ describe "Layout links" do
   end
 
   describe "when signed in" do
-    before :each do
+    before do
       @user = Factory :user
       visit signin_path
       fill_in "User name", with: @user.user_name
@@ -39,7 +39,7 @@ describe "Layout links" do
   end
 
   describe "when signed out" do
-    before :each do
+    before do
       @user = Factory :user
       visit signin_path
       fill_in "User name", with: @user.user_name

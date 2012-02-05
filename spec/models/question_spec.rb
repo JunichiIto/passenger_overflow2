@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Question do
-  before :each do
+  before do
     @user = Factory :user
     @attr = {
       title: "value for title",
@@ -10,7 +10,7 @@ describe Question do
   end
 
   describe "user associations" do
-    before :each do
+    before do
       @question = @user.questions.create @attr
     end
 
@@ -43,7 +43,7 @@ describe Question do
   end
 
   describe "answer associations" do
-    before :each do
+    before do
       asker = Factory :user, user_name: "someone"
       @question = Factory :question, user: asker
       @a1 = Factory :answer, question: @question, user: @user, created_at: 1.day.ago
@@ -60,7 +60,7 @@ describe Question do
   end
 
   describe "accepted answer associations" do
-    before :each do
+    before do
       @asker = Factory :user, user_name: "someone"
       @question = Factory :question, user: @asker
       @a1 = Factory :answer, question: @question, user: @user, created_at: 1.day.ago
@@ -115,7 +115,7 @@ describe Question do
       end
 
       describe "when accept myself" do
-        before :each do
+        before do
           @self_ans = Factory :answer, question: @question, user: @asker
         end        
         it "should not increase reputation" do
@@ -127,7 +127,7 @@ describe Question do
     end
 
     describe "when accepted" do
-      before :each do
+      before do
         @question.accept! @a2
       end
 

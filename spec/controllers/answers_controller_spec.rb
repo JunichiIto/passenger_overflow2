@@ -4,7 +4,7 @@ describe AnswersController do
   render_views
 
   describe "POST 'create'" do
-    before :each do
+    before do
       @user = Factory :user
       test_sign_in @user
       asker = Factory :user, user_name: "beginner"
@@ -12,7 +12,7 @@ describe AnswersController do
     end
 
     describe "failure" do
-      before :each do
+      before do
         @attr = { content: "" }
       end
 
@@ -29,7 +29,7 @@ describe AnswersController do
     end
 
     describe "success" do
-      before :each do
+      before do
         @attr = { content: "Lorem ipsum" }
       end
 
@@ -52,7 +52,7 @@ describe AnswersController do
   end
 
   describe "post 'accept'" do
-    before :each do
+    before do
       @user = Factory :user
       test_sign_in @user
       @asker = Factory :user, user_name: "beginner"
@@ -83,7 +83,7 @@ describe AnswersController do
   end
 
   describe "post 'vote'" do
-    before :each do
+    before do
       @user = Factory :user
       @asker = Factory :user, user_name: "beginner"
       @question = Factory :question, user: @asker
@@ -116,7 +116,7 @@ describe AnswersController do
   end
 
   describe "access control" do
-    before :each do
+    before do
       @user = Factory :user
       @asker = Factory :user, user_name: "beginner"
       @question = Factory :question, user: @asker

@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Answer do
-  before :each do
+  before do
     @user = Factory :user 
     @asker = Factory :user, user_name: "someone"
     @question = Factory :question, user: @asker
@@ -14,7 +14,7 @@ describe Answer do
   end
 
   describe "user associations" do
-    before :each do
+    before do
       @answer = Factory :answer, user: @user, question: @question
     end
 
@@ -38,7 +38,7 @@ describe Answer do
   end
 
   describe "validations" do
-    before :each do
+    before do
       @attr = { content: "my ans", user: @user, question: @question }
     end
 
@@ -59,7 +59,7 @@ describe Answer do
   end
 
   describe "vote associations" do
-    before :each do
+    before do
       @a1 = Factory :answer, question: @question, user: @user, created_at: 1.day.ago
       @a2 = Factory :answer, question: @question, user: @user, created_at: 1.hour.ago
     end
