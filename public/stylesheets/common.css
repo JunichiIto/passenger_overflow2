@@ -121,20 +121,25 @@ header ul:after{
     display: block;
     clear: both;
 }
+
 header li{
     float: left;
     width: 100px;
     list-style-type: none;
 }
+
 header h1 a:link {
     color: #666;
 }
+
 header h1 a:visited {
     color: #666;
 }
+
 header h1 a:hover {
     color: #cd4730;
 }
+
 header h1 a {
     text-decoration: none;
 }
@@ -144,6 +149,7 @@ p.flash {
     color: green;
     font-size: 120%;
 }
+
 p.error {
     color: red;
 }
@@ -154,19 +160,24 @@ div.createdinfo,
 div.voteinfo {
     margin-left: 10px;
 }
+
 div.answer,
 div.question {
     margin-bottom: 3em;
 }
+
 span.accepted {
     color: green;
 }
+
 span.voted {
     color: orange;
 }
+
 table.rephist td {
     padding: 5px 10px;
 }
+
 p.username {
     font-size: 120%;
 }
