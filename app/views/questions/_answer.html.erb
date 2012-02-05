@@ -1,5 +1,5 @@
 <div class="answer">
-  <%= simple_format answer.content %>
+  <%= auto_link(simple_format answer.content).html_safe %>
   <div class="createdinfo">
     <%= render_accept_section answer %>
     <%= render_model_info answer %>

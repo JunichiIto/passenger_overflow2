@@ -1,7 +1,7 @@
 <h2><%= @question.title %></h2>
 <div class="question">
   <div class="content">
-    <%= simple_format @question.content %>
+    <%= auto_link(simple_format @question.content).html_safe %>
   </div>
   <div class="createdinfo">
     <%= render_model_info @question %>
