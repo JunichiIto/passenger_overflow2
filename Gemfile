@@ -4,6 +4,9 @@ gem 'rails', '3.0.9'
 
 gem 'sqlite3', '1.3.3'
 
+gem 'haml'
+gem 'haml-rails'
+
 group :development, :test do
   gem 'rspec-rails', '2.6.1'
   gem 'rcov', '0.9.11'

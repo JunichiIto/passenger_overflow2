@@ -1,0 +1,8 @@
+#answer
+  = auto_link(simple_format answer.content).html_safe
+  #createdinfo
+    = render_accept_section answer
+    = render_model_info answer
+  #voteinfo
+    = render_vote_count answer
+    = render_vote_link answer

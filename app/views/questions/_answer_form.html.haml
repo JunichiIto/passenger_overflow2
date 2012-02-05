@@ -1,0 +1,13 @@
+%h3 Your Answer
+- if signed_in?
+  = form_for [@question, @answer] do |f|
+    = render 'shared/error_messages', :object => f.object
+    .field
+      = f.label :content
+      %br/
+      = f.text_area :content, :size => '50x5'
+    .actions
+      = f.submit "Post Your Answer"
+- else
+  %p
+    Please #{link_to "sign in", signin_path} to post your answer.

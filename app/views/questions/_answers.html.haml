@@ -1,0 +1,4 @@
+- if !@question.answers.empty?
+  %h3= pluralize @question.answers.count, "Answer"
+  .answers
+    = render partial: "questions/answer", collection: @question.answers

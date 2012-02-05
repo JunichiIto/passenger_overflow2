@@ -1,7 +1,0 @@
-<% if !@question.answers.empty? %>
-  <h3><%= pluralize @question.answers.count, "Answer" %></h3>
-  <div class="answers">
-    <%= render partial: "questions/answer", collection: @question.answers %>
-  </div>
-<% end %>
-

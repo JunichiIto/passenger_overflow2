@@ -1,0 +1,9 @@
+%h2 Questions
+.questions
+  - @questions.each do |question|
+    %p.question
+      .title
+        = link_to question.title, question
+      .createdinfo
+        = render_answer_count question
+        = render_model_info question
