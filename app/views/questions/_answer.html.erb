@@ -3,17 +3,17 @@
   <div class="createdinfo">
     <% if @question.accepted? %>
       <% if @question.accepted_answer_id == answer.id %>
-        <span class="accepted">Accepted</span>
+        <%= render_accepted %>
       <% end %>
    <% else %>
       <% if current_user == @question.user %>
         <span id="<%= "accept#{answer.id}" %>">
-        <%= link_to "Accept", 
-                    accept_answer_path(answer), 
-                    method: :post, 
-                    remote: true, 
-                    style: "display:inline;", 
-                    id: "accept#{answer.id}" %>
+          <%= link_to "Accept", 
+                      accept_answer_path(answer), 
+                      method: :post, 
+                      remote: true, 
+                      style: "display:inline;", 
+                      id: "accept#{answer.id}" %>
         </span>
       <% end %>
     <% end %>

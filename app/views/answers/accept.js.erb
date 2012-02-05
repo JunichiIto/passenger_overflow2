@@ -1,1 +1,1 @@
-$('<%= "accept#{@accepted_answer.id}" %>').update('<span class="accepted">Accepted</span>')
+$('<%= "accept#{@accepted_answer.id}" %>').update('<%= escape_javascript render_accepted %>')
