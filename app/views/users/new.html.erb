@@ -1,14 +1,11 @@
-<h2>Sign up</h2>
-<%= form_for(@user) do |f| %>
-  <%= render 'shared/error_messages', :object => f.object %>
-  <div class="field">
-    <%= f.label :user_name %><br />
-    <%= f.text_field :user_name %>
-  </div>
-  <div>
-  Only a-z and 0-9 can be used.  
-  </div>
-  <div class="actions">
-    <%= f.submit "Sign up" %>
-  </div>
-<% end %>
+%h2 Sign up
+= form_for(@user) do |f|
+  = render 'shared/error_messages', object: f.object
+  .field
+    = f.label :user_name
+    %br/
+    = f.text_field :user_name
+  %div
+    Only a-z and 0-9 can be used.
+  .actions
+    = f.submit "Sign up"

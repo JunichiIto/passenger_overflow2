@@ -1,1 +1,2 @@
-$('<%= "accept#{@accepted_answer.id}" %>').update('<%= escape_javascript render_accepted %>')
+:plain
+  $('accept#{@accepted_answer.id}').update('#{escape_javascript render_accepted}')

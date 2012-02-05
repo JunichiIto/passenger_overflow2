@@ -1,10 +1,6 @@
-<h2>All users</h2>
-
-<ul class="users">
-  <% @users.each do |user| %>
-    <li>
-      <%= link_to user.user_name, user %>
-      <%= user.reputation_point %>
-    </li>
-  <% end %>
-</ul>
+%h2 All users
+%ul.users
+  - @users.each do |user|
+    %li
+      = link_to user.user_name, user
+      = user.reputation_point

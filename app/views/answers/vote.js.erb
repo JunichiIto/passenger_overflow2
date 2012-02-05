@@ -1,2 +1,3 @@
-$('<%= "votelink#{@voted_answer.id}" %>').update("")
-$('<%= "votecnt#{@voted_answer.id}" %>').update('<%= escape_javascript render_vote_count @voted_answer %>')
+:plain
+  $('votelink#{@voted_answer.id}').update("")
+  $('votecnt#{@voted_answer.id}').update('#{escape_javascript render_vote_count @voted_answer}')

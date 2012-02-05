@@ -1,23 +1,16 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Passenger Overflow</title>
-    <%= stylesheet_link_tag :all %>
-    <%= javascript_include_tag :defaults %>
-    <%= csrf_meta_tag %>
-    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
-  </head>
-  <body>
-    <header>
-      <%= render "layouts/header" %>
-    </header>
-    <section>
-      <% flash.each do |key, value| %>
-        <p class="flash <%= key %>"><%= value %></p>
-      <% end %>
-    </section>
-    <div id="main">
-      <%= yield %>
-    </div>
-  </body>
-</html>
+!!!
+%html
+  %head
+    %title Passenger Overflow
+    = stylesheet_link_tag :all
+    = javascript_include_tag :defaults
+    = csrf_meta_tag
+    %link{href: "/favicon.ico", rel: "shortcut icon", type: "image/x-icon"}/
+  %body
+    %header
+      = render "layouts/header"
+    %section
+      - flash.each do |key, value|
+        %p{class: "flash #{key}"}= value
+    #main
+      = yield
