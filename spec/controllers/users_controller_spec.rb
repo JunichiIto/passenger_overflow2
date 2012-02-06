@@ -36,12 +36,11 @@ describe UsersController do
       asker = Factory :user, user_name: "someone"
       other = Factory :user, user_name: "other"
       question = Factory :question, user: asker
-      a1 = Factory :answer, question: question, user: @user
-      v1 = Factory :vote, user: asker, answer: a1
+      answer = Factory :answer, question: question, user: @user
 
       #user answers a question and is accepted and voted
-      question.accept! a1
-      other.vote! a1
+      question.accept! answer
+      other.vote! answer
 
       #user asks a question and accept answer
       my_question = Factory :question, user: @user

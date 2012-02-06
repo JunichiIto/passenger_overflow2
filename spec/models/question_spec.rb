@@ -46,8 +46,8 @@ describe Question do
     before do
       asker = Factory :user, user_name: "someone"
       @question = Factory :question, user: asker
-      @a1 = Factory :answer, question: @question, user: @user, created_at: 1.day.ago
-      @a2 = Factory :answer, question: @question, user: @user, created_at: 1.hour.ago
+      @answer1 = Factory :answer, question: @question, user: @user, created_at: 1.day.ago
+      @answer2 = Factory :answer, question: @question, user: @user, created_at: 1.hour.ago
     end
 
     it "should have a answers attribute" do
@@ -55,7 +55,7 @@ describe Question do
     end
 
     it "should have the right answers in the right order" do
-      @question.answers.should == [@a2, @a1]
+      @question.answers.should == [@answer2, @answer1]
     end
   end
 
@@ -63,8 +63,8 @@ describe Question do
     before do
       @asker = Factory :user, user_name: "someone"
       @question = Factory :question, user: @asker
-      @a1 = Factory :answer, question: @question, user: @user, created_at: 1.day.ago
-      @a2 = Factory :answer, question: @question, user: @user, created_at: 1.hour.ago
+      @answer1 = Factory :answer, question: @question, user: @user, created_at: 1.day.ago
+      @answer2 = Factory :answer, question: @question, user: @user, created_at: 1.hour.ago
     end
 
     it "should have an accept attribute" do
@@ -72,9 +72,9 @@ describe Question do
     end
 
     it "should accept an answer" do
-      @question.accept! @a2
-      @question.accepted_answer_id.should == @a2.id
-      @question.accepted_answer.should == @a2
+      @question.accept! @answer2
+      @question.accepted_answer_id.should == @answer2.id
+      @question.accepted_answer.should == @answer2
     end
     
     it "should have an accepted? attribute" do
@@ -84,14 +84,14 @@ describe Question do
     describe "reputation on asker" do
       it "should increase asker's reputation" do
         lambda do
-          @question.accept! @a2
+          @question.accept! @answer2
         end.should change(@asker.reputations, :size).from(0).to(1)
       end
 
       it "should add the right reputation" do
-        @question.accept! @a2
+        @question.accept! @answer2
         rep = @asker.reputations.pop
-        rep.activity.should == @a2
+        rep.activity.should == @answer2
         rep.reason.should == "accepted"
         rep.point.should == 2
         rep.user.should == @asker
@@ -101,14 +101,14 @@ describe Question do
     describe "reputation on teacher" do
       it "should increase teacher's reputation" do
         lambda do
-          @question.accept! @a2
+          @question.accept! @answer2
         end.should change(@user.reputations, :size).from(0).to(1)
       end
 
       it "should add the right reputation" do
-        @question.accept! @a2
+        @question.accept! @answer2
         rep = @user.reputations.pop
-        rep.activity.should == @a2
+        rep.activity.should == @answer2
         rep.reason.should == "accept"
         rep.point.should == 15
         rep.user.should == @user
@@ -128,7 +128,7 @@ describe Question do
 
     describe "when accepted" do
       before do
-        @question.accept! @a2
+        @question.accept! @answer2
       end
 
       it "should be accepted" do

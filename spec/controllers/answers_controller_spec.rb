@@ -53,13 +53,11 @@ describe AnswersController do
 
   describe "post 'accept'" do
     before do
-      @user = Factory :user
-      test_sign_in @user
-      @asker = Factory :user, user_name: "beginner"
-      @question = Factory :question, user: @asker
-      @answer = Factory :answer, question: @question, user: @user
-      second = Factory :answer, question: @question, user: @user, created_at: 1.day.ago
-      third = Factory :answer, question: @question, user: @user, created_at: 1.hour.ago
+      user = Factory :user
+      test_sign_in user
+      asker = Factory :user, user_name: "beginner"
+      question = Factory :question, user: asker
+      @answer = Factory :answer, question: question, user: user
     end
 
     it "should accept an answer using Ajax" do
@@ -75,10 +73,10 @@ describe AnswersController do
 
   describe "post 'vote'" do
     before do
-      @user = Factory :user
+      user = Factory :user
       @asker = Factory :user, user_name: "beginner"
-      @question = Factory :question, user: @asker
-      @answer = Factory :answer, question: @question, user: @user
+      question = Factory :question, user: @asker
+      @answer = Factory :answer, question: question, user: user
       test_sign_in @asker
     end
 
@@ -101,10 +99,10 @@ describe AnswersController do
 
   describe "access control" do
     before do
-      @user = Factory :user
-      @asker = Factory :user, user_name: "beginner"
-      @question = Factory :question, user: @asker
-      @answer = Factory :answer, question: @question, user: @user
+      user = Factory :user
+      asker = Factory :user, user_name: "beginner"
+      question = Factory :question, user: asker
+      @answer = Factory :answer, question: question, user: user
       test_sign_out
     end
 

@@ -60,11 +60,19 @@ describe Answer do
 
   describe "vote associations" do
     before do
-      @a1 = Factory :answer, question: @question, user: @user, created_at: 1.day.ago
-      @a2 = Factory :answer, question: @question, user: @user, created_at: 1.hour.ago
+      @answer = Factory :answer, question: @question, user: @user, created_at: 1.day.ago
+      @vote1 = @asker.vote! @answer
+      other_user = Factory :user, user_name: "other"
+      @vote2 = other_user.vote! @answer
     end
+
     it "should have a votes attribute" do
-      Answer.new.should respond_to :votes
+      @answer.should respond_to :votes
+    end
+
+    it "should have the right votes" do
+      @answer.votes.should include @vote1
+      @answer.votes.should include @vote2
     end
   end
 end
