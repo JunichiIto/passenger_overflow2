@@ -24,6 +24,10 @@ class User < ActiveRecord::Base
     end
     vote
   end
+
+  def can_vote?(answer)
+    !already_voted?(answer) && answer.user != self
+  end
   
   def already_voted?(answer)
     votes.exists? answer_id: answer

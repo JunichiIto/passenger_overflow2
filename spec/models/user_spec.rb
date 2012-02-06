@@ -90,7 +90,8 @@ describe User do
       @user = Factory :user
       @asker = Factory :user, user_name: "someone"
       question = Factory :question, user: @asker
-      @a1 = Factory :answer, question: question, user: @user, created_at: 1.day.ago
+      @a1 = Factory :answer, question: question, user: @user
+      @a2 = Factory :answer, question: question, user: @asker
     end
 
     it "should have a votes attribute" do
@@ -127,6 +128,32 @@ describe User do
       rep.activity.should == vote
       rep.reason.should == "upvote"
       rep.point.should == 10
+    end
+
+    describe "can_vote?" do
+      it "should have a can_vote? method" do
+        @asker.should respond_to :can_vote?
+      end
+    
+      it "should be okay" do
+        @asker.can_vote?(@a1).should be_true
+      end
+
+      describe "when already voted" do
+        before do
+          @asker.vote! @a1
+        end
+  
+        it "should not be okay" do
+          @asker.can_vote?(@a1).should_not be_true
+        end
+      end
+
+      describe "when my own answer" do
+        it "should not be okay" do
+          @asker.can_vote?(@a2).should_not be_true
+        end
+      end
     end
   end
 
