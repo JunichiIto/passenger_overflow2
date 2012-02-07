@@ -27,9 +27,9 @@ describe "Layout links" do
 
   describe "when signed in" do
     before do
-      @user = Factory :user
+      user = Factory :user
       visit signin_path
-      fill_in "User name", with: @user.user_name
+      fill_in "User name", with: user.user_name
       click_button
     end
 
@@ -46,9 +46,9 @@ describe "Layout links" do
 
   describe "when signed out" do
     before do
-      @user = Factory :user
+      user = Factory :user
       visit signin_path
-      fill_in "User name", with: @user.user_name
+      fill_in "User name", with: user.user_name
       click_button
       visit root_path
       click_link "Sign out"

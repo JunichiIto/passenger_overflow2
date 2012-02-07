@@ -10,10 +10,10 @@ describe Vote do
   
   describe "validations" do
     before do
-      @user = Factory :user
+      user = Factory :user
       @asker = Factory :user, user_name: "someone"
       question = Factory :question, user: @asker
-      @answer = Factory :answer, question: question, user: @user, created_at: 1.day.ago
+      @answer = Factory :answer, question: question, user: user, created_at: 1.day.ago
     end
 
     it "should require a user id" do
