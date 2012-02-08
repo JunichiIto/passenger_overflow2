@@ -1,7 +1,7 @@
 - if signed_in? && current_user.can_vote?(answer)
   = content_tag :span, id: "votelink#{answer.id}" do
     = link_to "Vote+",                  |   
-              vote_answer_path(answer), | 
+              vote_question_answer_path(answer.question, answer), | 
               method: :post,            |  
               class: "vote",            | 
               remote: true              |    

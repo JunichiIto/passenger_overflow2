@@ -1,15 +1,16 @@
 class AnswersController < ApplicationController
   before_filter :authenticate, only: [:create, :accept, :vote]
+  before_filter :load_question
 
   def create
-    @question = Question.find params[:question_id]
     @answer = @question.answers.build params[:answer]
-    current_user.answers << @answer
+    @answer.user = current_user
 
     if @answer.save
       flash[:success] = "Answer created!"
       redirect_to @question
     else
+      # remove unsaved record.
       @question.reload
       render "questions/show"
     end
@@ -17,7 +18,6 @@ class AnswersController < ApplicationController
 
   def accept
     @accepted_answer = Answer.find params[:id]
-    @question = @accepted_answer.question
     @question.accept! @accepted_answer
     respond_to do |format|
       format.html { redirect_to @question }
@@ -28,10 +28,14 @@ class AnswersController < ApplicationController
   def vote
     @voted_answer = Answer.find params[:id]
     current_user.vote! @voted_answer
-    @question = @voted_answer.question
     respond_to do |format|
       format.html { redirect_to @question }
       format.js
     end
+  end
+
+  private
+  def load_question
+    @question = Question.find params[:question_id]
   end
 end

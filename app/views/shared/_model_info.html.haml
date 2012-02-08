@@ -1,1 +1,4 @@
-= "[ #{model.created_at.to_s} #{render "shared/user_info", user: model.user} ]".html_safe
+[
+= model.created_at
+= render "shared/user_info", user: model.user
+]

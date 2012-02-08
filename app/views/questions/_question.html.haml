@@ -1,6 +1,6 @@
 %h2= @question.title
 .question
   .content
-    = auto_link(simple_format @question.content).html_safe
+    = simple_format(auto_link @question.content)
   .createdinfo
     = render "shared/model_info", model: @question

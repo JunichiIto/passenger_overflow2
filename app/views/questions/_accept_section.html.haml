@@ -3,8 +3,5 @@
     = render "questions/accepted"
 - else
   - if current_user == @question.user
-    = content_tag :span, id: "accept#{answer.id}" do
-      = link_to "Accept",                   |  
-                accept_answer_path(answer), | 
-                method: :post,              | 
-                remote: true                | 
+    %span{id: "accept#{answer.id}"}
+      = link_to "Accept", accept_question_answer_path(answer.question, answer), method: :post, remote: true

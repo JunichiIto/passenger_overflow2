@@ -5,10 +5,6 @@ class Reputation < ActiveRecord::Base
   default_scope order: "reputations.created_at DESC"
 
   def question
-    if activity_type == "Vote"
-      activity.answer.question
-    else
-      activity.question
-    end
+    activity.question
   end
 end

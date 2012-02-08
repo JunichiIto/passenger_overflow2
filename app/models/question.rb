@@ -13,7 +13,7 @@ class Question < ActiveRecord::Base
 
   def accept!(answer)
     self.accepted_answer = answer
-    ActiveRecord::Base.transaction do
+    self.class.transaction do
       save!
       if answer.user != user
         user.reputations.create! reason: "accepted", point: 2, activity: answer

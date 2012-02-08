@@ -17,12 +17,10 @@ class User < ActiveRecord::Base
   end
 
   def vote!(answer)
-    vote = votes.build user: self, answer: answer
-    ActiveRecord::Base.transaction do
+    votes.create! answer: answer do |vote|
       vote.save!
       answer.user.reputations.create! activity: vote, reason: "upvote", point: 10
     end
-    vote
   end
 
   def can_vote?(answer)
@@ -34,6 +32,6 @@ class User < ActiveRecord::Base
   end
 
   def reputation_point
-    Reputation.where("user_id = ?", id).sum(:point)
+    reputations.sum(:point)
   end
 end

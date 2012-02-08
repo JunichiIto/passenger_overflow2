@@ -4,4 +4,8 @@ class Vote < ActiveRecord::Base
   
   validates :user_id, presence: true
   validates :answer_id, presence: true
+
+  def question
+    answer.question
+  end
 end

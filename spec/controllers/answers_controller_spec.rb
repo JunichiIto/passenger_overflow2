@@ -64,7 +64,7 @@ describe AnswersController do
       question = @answer.question
       question.accepted_answer.should be_nil
       lambda do
-        xhr :post, :accept, id: @answer
+        xhr :post, :accept, question_id: @answer.question, id: @answer
         response.should be_success
         question.reload
       end.should change(question, :accepted_answer).from(nil).to(@answer)
@@ -82,7 +82,7 @@ describe AnswersController do
 
     it "should increment votes count in answer after vote cast using ajax" do
       lambda do
-        xhr :post, :vote, id: @answer
+        xhr :post, :vote, question_id: @answer.question, id: @answer
         response.should be_success
         @answer.votes.reload
       end.should change(@answer.votes, :size).from(0).to(1)
@@ -90,7 +90,7 @@ describe AnswersController do
 
     it "should increment votes count in asker after vote cast using ajax" do
       lambda do
-        xhr :post, :vote, id: @answer
+        xhr :post, :vote, question_id: @answer.question, id: @answer
         response.should be_success
         @answer.votes.reload
       end.should change(@asker.votes, :size).by(1)
@@ -112,12 +112,12 @@ describe AnswersController do
     end
 
     it "should deny access to 'accept'" do
-      post :accept, id: @answer
+      post :accept, question_id: @answer.question, id: @answer
       response.should redirect_to signin_path
     end
     
     it "should deny access to 'vote'" do
-      post :vote, id: @answer
+      post :vote, question_id: @answer.question, id: @answer
       response.should redirect_to signin_path
     end
   end
