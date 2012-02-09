@@ -63,72 +63,16 @@ describe Question do
     before do
       @asker = Factory :user, user_name: "someone"
       @question = Factory :question, user: @asker
-      @answer1 = Factory :answer, question: @question, user: @user, created_at: 1.day.ago
-      @answer2 = Factory :answer, question: @question, user: @user, created_at: 1.hour.ago
+      @answer = Factory :answer, question: @question, user: @user, created_at: 1.day.ago
     end
 
-    it "should have an accept attribute" do
-      @question.should respond_to :accept!
-    end
-
-    it "should accept an answer" do
-      @question.accept! @answer2
-      @question.accepted_answer_id.should == @answer2.id
-      @question.accepted_answer.should == @answer2
-    end
-    
     it "should have an accepted? attribute" do
       @question.should respond_to :accepted?
     end
 
-    describe "reputation on asker" do
-      it "should increase asker's reputation" do
-        lambda do
-          @question.accept! @answer2
-        end.should change(@asker.reputations, :size).from(0).to(1)
-      end
-
-      it "should add the right reputation" do
-        @question.accept! @answer2
-        rep = @asker.reputations.pop
-        rep.activity.should == @answer2
-        rep.reason.should == "accepted"
-        rep.point.should == 2
-        rep.user.should == @asker
-      end
-    end
-
-    describe "reputation on teacher" do
-      it "should increase teacher's reputation" do
-        lambda do
-          @question.accept! @answer2
-        end.should change(@user.reputations, :size).from(0).to(1)
-      end
-
-      it "should add the right reputation" do
-        @question.accept! @answer2
-        rep = @user.reputations.pop
-        rep.activity.should == @answer2
-        rep.reason.should == "accept"
-        rep.point.should == 15
-        rep.user.should == @user
-      end
-
-      describe "when accept myself" do
-        before do
-          @self_ans = Factory :answer, question: @question, user: @asker
-        end        
-        it "should not increase reputation" do
-          lambda do
-            @question.accept! @self_ans
-          end.should_not change(@asker.reputations, :size)
-        end
-      end
-    end
-
     describe "when accepted" do
       before do
-        @question.accept! @answer2
+        @answer.accepted!
       end
 
       it "should be accepted" do

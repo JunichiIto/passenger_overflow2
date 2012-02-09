@@ -17,8 +17,8 @@ class AnswersController < ApplicationController
   end
 
   def accept
-    @accepted_answer = Answer.find params[:id]
-    @question.accept! @accepted_answer
+    @selected_answer = Answer.find params[:id]
+    @selected_answer.accepted!
     respond_to do |format|
       format.html { redirect_to @question }
       format.js

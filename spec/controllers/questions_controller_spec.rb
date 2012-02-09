@@ -33,7 +33,7 @@ describe QuestionsController do
     describe "when an answer is accepted" do
       before do
         @answer = Factory :answer, question: @question, user: @user
-        @question.accept! @answer
+        @answer.accepted!
       end
 
       it "should indicate an answer is accepted" do
@@ -130,7 +130,7 @@ describe QuestionsController do
       describe "already accepted" do
         before do
           test_sign_in @asker
-          @question.accept! @answer
+          @answer.accepted!
         end
     
         it "should already accepted" do

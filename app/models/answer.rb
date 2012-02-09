@@ -10,4 +10,15 @@ class Answer < ActiveRecord::Base
   validates :question_id, presence: true
 
   default_scope order: "answers.created_at DESC"
+
+  def accepted!
+    question.accepted_answer = self
+    self.class.transaction do
+      question.save!
+      if user != question.user
+        question.user.reputations.create! reason: "accepted", point: 2, activity: self
+        user.reputations.create! reason: "accept", point: 15, activity: self
+      end
+    end
+  end
 end
