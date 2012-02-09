@@ -1,0 +1,710 @@
+diff --git a/app/controllers/answers_controller.rb b/app/controllers/answers_controller.rb
+index 15d97ef..f3fb166 100644
+--- a/app/controllers/answers_controller.rb
++++ b/app/controllers/answers_controller.rb
+@@ -17,8 +17,8 @@ class AnswersController < ApplicationController
+   end
+ 
+   def accept
+-    @accepted_answer = Answer.find params[:id]
+-    @question.accept! @accepted_answer
++    @selected_answer = Answer.find params[:id]
++    @selected_answer.accepted!
+     respond_to do |format|
+       format.html { redirect_to @question }
+       format.js
+diff --git a/app/helpers/sessions_helper.rb b/app/helpers/sessions_helper.rb
+index 5b2cfa6..15e6517 100644
+--- a/app/helpers/sessions_helper.rb
++++ b/app/helpers/sessions_helper.rb
+@@ -32,7 +32,7 @@ module SessionsHelper
+ 
+   def deny_access
+     store_location
+-    redirect_to signin_path, notice: "Please sign in to access this page."
++    redirect_to new_session_path, notice: "Please sign in to access this page."
+   end
+ 
+   private
+diff --git a/app/models/answer.rb b/app/models/answer.rb
+index 1cf1dd2..f64bc3a 100644
+--- a/app/models/answer.rb
++++ b/app/models/answer.rb
+@@ -10,4 +10,15 @@ class Answer < ActiveRecord::Base
+   validates :question_id, presence: true
+ 
+   default_scope order: "answers.created_at DESC"
++
++  def accepted!
++    question.accepted_answer = self
++    self.class.transaction do
++      question.save!
++      if user != question.user
++        question.user.reputations.create! reason: "accepted", point: 2, activity: self
++        user.reputations.create! reason: "accept", point: 15, activity: self
++      end
++    end
++  end
+ end
+diff --git a/app/models/question.rb b/app/models/question.rb
+index 60d2dda..3b27195 100644
+--- a/app/models/question.rb
++++ b/app/models/question.rb
+@@ -11,17 +11,6 @@ class Question < ActiveRecord::Base
+ 
+   default_scope order: "questions.created_at DESC"
+ 
+-  def accept!(answer)
+-    self.accepted_answer = answer
+-    self.class.transaction do
+-      save!
+-      if answer.user != user
+-        user.reputations.create! reason: "accepted", point: 2, activity: answer
+-        answer.user.reputations.create! reason: "accept", point: 15, activity: answer
+-      end
+-    end
+-  end
+-
+   def accepted?
+     accepted_answer
+   end
+diff --git a/app/views/answers/accept.js.haml b/app/views/answers/accept.js.haml
+index 18d0f95..9dba2a6 100644
+--- a/app/views/answers/accept.js.haml
++++ b/app/views/answers/accept.js.haml
+@@ -1,2 +1,2 @@
+ :plain
+-  $('accept#{@accepted_answer.id}').update('#{escape_javascript render "questions/accepted"}')
++  $('accept#{@selected_answer.id}').update('#{escape_javascript render "questions/accepted"}')
+diff --git a/app/views/layouts/_header.html.haml b/app/views/layouts/_header.html.haml
+index d1e8476..870cd54 100644
+--- a/app/views/layouts/_header.html.haml
++++ b/app/views/layouts/_header.html.haml
+@@ -8,6 +8,6 @@
+     %li= link_to "Ask Question", new_question_path
+     %li= link_to "Users", users_path
+     - if signed_in?
+-      %li= link_to "Sign out", signout_path, method: :delete
++      %li= link_to "Sign out", session_path(current_user), method: :delete
+     - else
+-      %li= link_to "Sign in", signin_path
++      %li= link_to "Sign in", new_session_path
+diff --git a/app/views/questions/_answer_count.html.haml b/app/views/questions/_answer_count.html.haml
+index be28d63..43eb3aa 100644
+--- a/app/views/questions/_answer_count.html.haml
++++ b/app/views/questions/_answer_count.html.haml
+@@ -1,6 +1,4 @@
+ - if question.accepted?
+-  = content_tag :span,                                       |
+-                pluralize(question.answers.count, "Answer"), |
+-                class: "accepted"                            | 
++  %span.accepted= pluralize question.answers.count, "Answer"
+ - else
+   = pluralize question.answers.count, "Answer"
+diff --git a/app/views/questions/_answer_form.html.haml b/app/views/questions/_answer_form.html.haml
+index c25d0c8..1064dac 100644
+--- a/app/views/questions/_answer_form.html.haml
++++ b/app/views/questions/_answer_form.html.haml
+@@ -10,4 +10,4 @@
+       = f.submit "Post Your Answer"
+ - else
+   %p
+-    Please #{link_to "sign in", signin_path} to post your answer.
++    Please #{link_to "sign in", new_session_path} to post your answer.
+diff --git a/app/views/questions/_vote_count.html.haml b/app/views/questions/_vote_count.html.haml
+index 27f0414..0764737 100644
+--- a/app/views/questions/_vote_count.html.haml
++++ b/app/views/questions/_vote_count.html.haml
+@@ -1,9 +1,4 @@
+ - if signed_in? && current_user.already_voted?(answer)
+-  = content_tag :span,                                 | 
+-                pluralize(answer.votes.count, "vote"), |
+-                class: "voted",                        |
+-                id: "votecnt#{answer.id}"              | 
++  %span.voted{id: "votecnt#{answer.id}"}= pluralize answer.votes.count, "vote"
+ - else
+-  = content_tag :span,                                 | 
+-                pluralize(answer.votes.count, "vote"), | 
+-                id: "votecnt#{answer.id}"              | 
++  %span{id: "votecnt#{answer.id}"}= pluralize answer.votes.count, "vote"
+diff --git a/app/views/questions/_vote_link.html.haml b/app/views/questions/_vote_link.html.haml
+index 2b8a5b1..bbf0f64 100644
+--- a/app/views/questions/_vote_link.html.haml
++++ b/app/views/questions/_vote_link.html.haml
+@@ -1,7 +1,3 @@
+ - if signed_in? && current_user.can_vote?(answer)
+-  = content_tag :span, id: "votelink#{answer.id}" do
+-    = link_to "Vote+",                  |   
+-              vote_question_answer_path(answer.question, answer), | 
+-              method: :post,            |  
+-              class: "vote",            | 
+-              remote: true              |    
++  %span{id: "votelink#{answer.id}"}
++    = link_to "Vote+", vote_question_answer_path(answer.question, answer), method: :post, class: "vote", remote: true
+diff --git a/app/views/sessions/new.html.haml b/app/views/sessions/new.html.haml
+index d6c0b1c..1c984e6 100644
+--- a/app/views/sessions/new.html.haml
++++ b/app/views/sessions/new.html.haml
+@@ -7,4 +7,4 @@
+   .actions
+     = f.submit "Sign in"
+ %p
+-  New user? #{link_to "Sign up now!", signup_path}
++  New user? #{link_to "Sign up now!", new_user_path}
+diff --git a/app/views/users/show.html.haml b/app/views/users/show.html.haml
+index 426d75a..6eb9bff 100644
+--- a/app/views/users/show.html.haml
++++ b/app/views/users/show.html.haml
+@@ -1,5 +1,5 @@
+ %h2= @user.user_name
+-= content_tag :h3, "#{@user.reputation_point} Reputation"
++%h3 #{@user.reputation_point} Reputation
+ - if !@user.reputations.empty?
+   %table.rephist{border: "0"}
+     - @user.reputations.each do |rep|
+diff --git a/config/routes.rb b/config/routes.rb
+index 80e21c0..968d32c 100644
+--- a/config/routes.rb
++++ b/config/routes.rb
+@@ -1,20 +1,12 @@
+ PassengerOverflow2::Application.routes.draw do
+   resources :users, only: [:index, :show, :new, :create]
+-  resources :sessions, only: [:create]
++  resources :sessions, only: [:create, :new, :destroy]
+   resources :questions, only: [:new, :create, :show, :index] do
+     resources :answers, only: [:create] do
+       post :accept, on: :member
+       post :vote, on: :member
+     end
+   end  
+-  #resources :answers do
+-  #  post :accept, on: :member
+-  #  post :vote, on: :member
+-  #end
+-
+-  match "/signup", to: "users#new"
+-  match "/signin",  to: "sessions#new"
+-  match "/signout", to: "sessions#destroy"
+ 
+   root to: "questions#index"
+ end
+diff --git a/spec/controllers/answers_controller_spec.rb b/spec/controllers/answers_controller_spec.rb
+index ad3370b..eb8dd2c 100644
+--- a/spec/controllers/answers_controller_spec.rb
++++ b/spec/controllers/answers_controller_spec.rb
+@@ -108,17 +108,17 @@ describe AnswersController do
+ 
+     it "should deny access to 'create'" do
+       post :create, question_id: 1
+-      response.should redirect_to signin_path
++      response.should redirect_to new_session_path
+     end
+ 
+     it "should deny access to 'accept'" do
+       post :accept, question_id: @answer.question, id: @answer
+-      response.should redirect_to signin_path
++      response.should redirect_to new_session_path
+     end
+     
+     it "should deny access to 'vote'" do
+       post :vote, question_id: @answer.question, id: @answer
+-      response.should redirect_to signin_path
++      response.should redirect_to new_session_path
+     end
+   end
+ end
+diff --git a/spec/controllers/questions_controller_spec.rb b/spec/controllers/questions_controller_spec.rb
+index a57986e..0e3c37f 100644
+--- a/spec/controllers/questions_controller_spec.rb
++++ b/spec/controllers/questions_controller_spec.rb
+@@ -33,7 +33,7 @@ describe QuestionsController do
+     describe "when an answer is accepted" do
+       before do
+         @answer = Factory :answer, question: @question, user: @user
+-        @question.accept! @answer
++        @answer.accepted!
+       end
+ 
+       it "should indicate an answer is accepted" do
+@@ -130,7 +130,7 @@ describe QuestionsController do
+       describe "already accepted" do
+         before do
+           test_sign_in @asker
+-          @question.accept! @answer
++          @answer.accepted!
+         end
+     
+         it "should already accepted" do
+@@ -223,12 +223,12 @@ describe QuestionsController do
+ 
+     it "should deny access to 'create'" do
+       get :new
+-      response.should redirect_to signin_path
++      response.should redirect_to new_session_path
+     end
+ 
+     it "should deny access to 'create'" do
+       post :create
+-      response.should redirect_to signin_path
++      response.should redirect_to new_session_path
+     end
+   end
+ 
+diff --git a/spec/controllers/sessions_controller_spec.rb b/spec/controllers/sessions_controller_spec.rb
+index c6d03fc..71b51f7 100644
+--- a/spec/controllers/sessions_controller_spec.rb
++++ b/spec/controllers/sessions_controller_spec.rb
+@@ -58,8 +58,9 @@ describe SessionsController do
+ 
+   describe "DELETE 'destroy'" do
+     it "should sign a user out" do
+-      test_sign_in Factory :user
+-      delete :destroy
++      user = Factory :user
++      test_sign_in user
++      delete :destroy, id: user.id
+       controller.should_not be_signed_in
+       response.should redirect_to root_path
+     end
+diff --git a/spec/controllers/users_controller_spec.rb b/spec/controllers/users_controller_spec.rb
+index b5c483e..87e9f54 100644
+--- a/spec/controllers/users_controller_spec.rb
++++ b/spec/controllers/users_controller_spec.rb
+@@ -39,13 +39,13 @@ describe UsersController do
+       answer = Factory :answer, question: question, user: @user
+ 
+       #user answers a question and is accepted and voted
+-      question.accept! answer
++      answer.accepted!
+       other.vote! answer
+ 
+       #user asks a question and accept answer
+       my_question = Factory :question, user: @user
+       ans_to_my_question = Factory :answer, question: my_question, user: other
+-      my_question.accept! ans_to_my_question
++      ans_to_my_question.accepted!
+ 
+       get :show, id: @user
+     end
+diff --git a/spec/models/answer_spec.rb b/spec/models/answer_spec.rb
+index 5e0849b..4692e82 100644
+--- a/spec/models/answer_spec.rb
++++ b/spec/models/answer_spec.rb
+@@ -75,4 +75,66 @@ describe Answer do
+       @answer.votes.should include @vote2
+     end
+   end
++
++  describe "accepted answer associations" do
++    before do
++      @question = Factory :question, user: @asker
++      @answer = Factory :answer, question: @question, user: @user
++    end
++
++    it "should have an accept attribute" do
++      @answer.should respond_to :accepted!
++    end
++
++    it "should be accepted" do
++      @answer.accepted!
++      @question.accepted_answer_id.should == @answer.id
++      @question.accepted_answer.should == @answer
++    end
++
++    describe "reputation on asker" do
++      it "should increase asker's reputation" do
++        lambda do
++          @answer.accepted!
++        end.should change(@asker.reputations, :size).from(0).to(1)
++      end
++
++      it "should add the right reputation" do
++        @answer.accepted!
++        rep = @asker.reputations.pop
++        rep.activity.should == @answer
++        rep.reason.should == "accepted"
++        rep.point.should == 2
++        rep.user.should == @asker
++      end
++    end
++
++    describe "reputation on teacher" do
++      it "should increase teacher's reputation" do
++        lambda do
++          @answer.accepted!
++        end.should change(@user.reputations, :size).from(0).to(1)
++      end
++
++      it "should add the right reputation" do
++        @answer.accepted!
++        rep = @user.reputations.pop
++        rep.activity.should == @answer
++        rep.reason.should == "accept"
++        rep.point.should == 15
++        rep.user.should == @user
++      end
++
++      describe "when accept myself" do
++        before do
++          @self_ans = Factory :answer, question: @question, user: @asker
++        end        
++        it "should not increase reputation" do
++          lambda do
++            @self_ans.accepted!
++          end.should_not change(@asker.reputations, :size)
++        end
++      end
++    end
++  end
+ end
+diff --git a/spec/models/question_spec.rb b/spec/models/question_spec.rb
+index 3d3c160..7b1f144 100644
+--- a/spec/models/question_spec.rb
++++ b/spec/models/question_spec.rb
+@@ -63,72 +63,16 @@ describe Question do
+     before do
+       @asker = Factory :user, user_name: "someone"
+       @question = Factory :question, user: @asker
+-      @answer1 = Factory :answer, question: @question, user: @user, created_at: 1.day.ago
+-      @answer2 = Factory :answer, question: @question, user: @user, created_at: 1.hour.ago
++      @answer = Factory :answer, question: @question, user: @user, created_at: 1.day.ago
+     end
+ 
+-    it "should have an accept attribute" do
+-      @question.should respond_to :accept!
+-    end
+-
+-    it "should accept an answer" do
+-      @question.accept! @answer2
+-      @question.accepted_answer_id.should == @answer2.id
+-      @question.accepted_answer.should == @answer2
+-    end
+-    
+     it "should have an accepted? attribute" do
+       @question.should respond_to :accepted?
+     end
+ 
+-    describe "reputation on asker" do
+-      it "should increase asker's reputation" do
+-        lambda do
+-          @question.accept! @answer2
+-        end.should change(@asker.reputations, :size).from(0).to(1)
+-      end
+-
+-      it "should add the right reputation" do
+-        @question.accept! @answer2
+-        rep = @asker.reputations.pop
+-        rep.activity.should == @answer2
+-        rep.reason.should == "accepted"
+-        rep.point.should == 2
+-        rep.user.should == @asker
+-      end
+-    end
+-
+-    describe "reputation on teacher" do
+-      it "should increase teacher's reputation" do
+-        lambda do
+-          @question.accept! @answer2
+-        end.should change(@user.reputations, :size).from(0).to(1)
+-      end
+-
+-      it "should add the right reputation" do
+-        @question.accept! @answer2
+-        rep = @user.reputations.pop
+-        rep.activity.should == @answer2
+-        rep.reason.should == "accept"
+-        rep.point.should == 15
+-        rep.user.should == @user
+-      end
+-
+-      describe "when accept myself" do
+-        before do
+-          @self_ans = Factory :answer, question: @question, user: @asker
+-        end        
+-        it "should not increase reputation" do
+-          lambda do
+-            @question.accept! @self_ans
+-          end.should_not change(@asker.reputations, :size)
+-        end
+-      end
+-    end
+-
+     describe "when accepted" do
+       before do
+-        @question.accept! @answer2
++        @answer.accepted!
+       end
+ 
+       it "should be accepted" do
+diff --git a/spec/models/user_spec.rb b/spec/models/user_spec.rb
+index 529dd38..47aeb9c 100644
+--- a/spec/models/user_spec.rb
++++ b/spec/models/user_spec.rb
+@@ -90,8 +90,8 @@ describe User do
+       @user = Factory :user
+       @asker = Factory :user, user_name: "someone"
+       question = Factory :question, user: @asker
+-      @answer1 = Factory :answer, question: question, user: @user
+-      @answer2 = Factory :answer, question: question, user: @asker
++      @answer = Factory :answer, question: question, user: @user
++      @my_own_answer = Factory :answer, question: question, user: @asker
+     end
+ 
+     it "should have a votes attribute" do
+@@ -100,30 +100,30 @@ describe User do
+ 
+     it "should increment votes count in user after vote cast" do
+       lambda do
+-        @asker.vote! @answer1
++        @asker.vote! @answer
+       end.should change(@asker.votes, :size).by(1)      
+     end
+ 
+     it "should increment votes count in answer after vote cast" do
+       lambda do
+-        @asker.vote! @answer1
+-      end.should change(@answer1.votes, :count).by(1)
++        @asker.vote! @answer
++      end.should change(@answer.votes, :count).by(1)
+     end  
+     
+     it "should be already voted after vote cast" do
+-      @asker.already_voted?(@answer1).should be_false
+-      @asker.vote! @answer1
+-      @asker.already_voted?(@answer1).should be_true
++      @asker.already_voted?(@answer).should be_false
++      @asker.vote! @answer
++      @asker.already_voted?(@answer).should be_true
+     end
+ 
+     it "should increase teacher's reputation" do
+       lambda do
+-        @asker.vote! @answer1
++        @asker.vote! @answer
+       end.should change(@user.reputations, :size).from(0).to(1)
+     end
+ 
+     it "should have the right reputation" do
+-      vote = @asker.vote! @answer1
++      vote = @asker.vote! @answer
+       rep = @user.reputations.pop
+       rep.activity.should == vote
+       rep.reason.should == "upvote"
+@@ -136,22 +136,22 @@ describe User do
+       end
+     
+       it "should be okay" do
+-        @asker.can_vote?(@answer1).should be_true
++        @asker.can_vote?(@answer).should be_true
+       end
+ 
+       describe "when already voted" do
+         before do
+-          @asker.vote! @answer1
++          @asker.vote! @answer
+         end
+   
+         it "should not be okay" do
+-          @asker.can_vote?(@answer1).should_not be_true
++          @asker.can_vote?(@answer).should_not be_true
+         end
+       end
+ 
+       describe "when my own answer" do
+         it "should not be okay" do
+-          @asker.can_vote?(@answer2).should_not be_true
++          @asker.can_vote?(@my_own_answer).should_not be_true
+         end
+       end
+     end
+@@ -163,9 +163,9 @@ describe User do
+       asker = Factory :user, user_name: "someone"
+       other = Factory :user, user_name: "other"
+       question = Factory :question, user: asker
+-      answer1 = Factory :answer, question: question, user: @user
+-      vote1 = Factory :vote, user: asker, answer: answer1
+-      vote2 = Factory :vote, user: other, answer: answer1
++      answer = Factory :answer, question: question, user: @user
++      vote1 = Factory :vote, user: asker, answer: answer
++      vote2 = Factory :vote, user: other, answer: answer
+       @reputation1 = Factory :reputation, user: @user, activity:vote1, created_at: 1.day.ago
+       @reputation2 = Factory :reputation, user: @user, activity:vote2, created_at: 1.hour.ago
+     end    
+@@ -181,17 +181,17 @@ describe User do
+       asker = Factory :user, user_name: "someone"
+       other = Factory :user, user_name: "other"
+       question = Factory :question, user: asker
+-      answer1 = Factory :answer, question: question, user: @user
+-      vote1 = Factory :vote, user: asker, answer: answer1
++      answer = Factory :answer, question: question, user: @user
++      vote = Factory :vote, user: asker, answer: answer
+ 
+       #user answers a question and is accepted and voted
+-      question.accept! answer1
+-      other.vote! answer1
++      answer.accepted!
++      other.vote! answer
+ 
+       #user asks a question and accept answer
+       my_question = Factory :question, user: @user
+       ans_to_my_question = Factory :answer, question: my_question, user: other
+-      my_question.accept! ans_to_my_question
++      ans_to_my_question.accepted! 
+     end    
+ 
+     it "should have 3 reputations" do
+diff --git a/spec/requests/answers_spec.rb b/spec/requests/answers_spec.rb
+index 03d8c3c..e3ef0af 100644
+--- a/spec/requests/answers_spec.rb
++++ b/spec/requests/answers_spec.rb
+@@ -3,7 +3,7 @@ require 'spec_helper'
+ describe "Answers" do
+   before do
+     user = Factory :user
+-    visit signin_path
++    visit new_session_path
+     fill_in :session_user_name, with: user.user_name
+     click_button
+     
+diff --git a/spec/requests/layout_links_spec.rb b/spec/requests/layout_links_spec.rb
+index 85a9629..eb3ec2a 100644
+--- a/spec/requests/layout_links_spec.rb
++++ b/spec/requests/layout_links_spec.rb
+@@ -2,62 +2,56 @@ describe "Layout links" do
+   describe "when not signed in" do
+     it "should have a signin link" do
+       visit root_path
+-      response.should have_selector("a", href: signin_path,
+-                                         content: "Sign in")
++      response.should have_selector "a", href: new_session_path, content: "Sign in"
+     end
+ 
+     it "should have an ask question link" do
+       visit root_path
+-      response.should have_selector("a", href: new_question_path,
+-                                         content: "Ask Question")
++      response.should have_selector "a", href: new_question_path, content: "Ask Question"
+     end
+ 
+     it "should have a questions link" do
+       visit root_path
+-      response.should have_selector("a", href: questions_path,
+-                                         content: "Questions")
++      response.should have_selector "a", href: questions_path, content: "Questions"
+     end
+ 
+     it "should have a users link" do
+       visit root_path
+-      response.should have_selector("a", href: users_path,
+-                                         content: "Users")
++      response.should have_selector "a", href: users_path, content: "Users"
+     end
+   end
+ 
+   describe "when signed in" do
+     before do
+-      user = Factory :user
+-      visit signin_path
+-      fill_in "User name", with: user.user_name
++      @user = Factory :user
++      visit new_session_path
++      fill_in "User name", with: @user.user_name
+       click_button
+     end
+ 
+     it "should have a signout link" do
+       visit root_path
+-      response.should have_selector("a", href: signout_path,
+-                                         content: "Sign out")
++      response.should have_selector "a", href: session_path(@user), content: "Sign out"
+     end
+ 
+     it "should show welcome message" do
+-      response.should have_selector("p", content: "Welcome back")
++      response.should have_selector "p", content: "Welcome back"
+     end
+   end
+ 
+   describe "when signed out" do
+     before do
+       user = Factory :user
+-      visit signin_path
++      visit new_session_path
+       fill_in "User name", with: user.user_name
+       click_button
+       visit root_path
+-      click_link "Sign out"
++      click_link "Sign out", method: :delete
+     end
+ 
+     it "should have a signin link" do
+       visit root_path
+-      response.should have_selector("a", href: signin_path,
+-                                         content: "Sign in")
++      response.should have_selector "a", href: new_session_path, content: "Sign in"
+     end
+ 
+     it "should show byebye message" do
+diff --git a/spec/requests/questions_spec.rb b/spec/requests/questions_spec.rb
+index 1e8214e..872aa87 100644
+--- a/spec/requests/questions_spec.rb
++++ b/spec/requests/questions_spec.rb
+@@ -3,7 +3,7 @@ require 'spec_helper'
+ describe "Questions" do
+   before do
+     user = Factory :user
+-    visit signin_path
++    visit new_session_path
+     fill_in :session_user_name, with: user.user_name
+     click_button
+   end
+diff --git a/spec/requests/users_spec.rb b/spec/requests/users_spec.rb
+index 7130e18..49993cf 100644
+--- a/spec/requests/users_spec.rb
++++ b/spec/requests/users_spec.rb
+@@ -5,7 +5,7 @@ describe "Users" do
+     describe "failure" do
+       it "should not make a new user" do
+         lambda do
+-          visit signup_path
++          visit new_user_path
+           fill_in "User name", with: ""
+           click_button
+           response.should render_template "users/new"
+@@ -17,11 +17,10 @@ describe "Users" do
+     describe "success" do
+       it "should make a new user" do
+         lambda do
+-          visit signup_path
++          visit new_user_path
+           fill_in "User name", with: "junichiito"
+           click_button
+-          response.should have_selector("p.flash.success",
+-                                        content: "Welcome")
++          response.should have_selector "p.flash.success", content: "Welcome"
+           response.should render_template "users/show"
+         end.should change(User, :count).by(1)
+       end
+@@ -31,7 +30,7 @@ describe "Users" do
+   describe "sign in/out" do
+     describe "failure" do
+       it "should not sign a user in" do
+-        visit signin_path
++        visit new_session_path
+         fill_in "User name", with: ""
+         click_button
+         response.should have_selector "p.flash.error", content: "Invalid"
+@@ -41,11 +40,11 @@ describe "Users" do
+     describe "success" do
+       it "should sign a user in and out" do
+         user = Factory :user
+-        visit signin_path
++        visit new_session_path
+         fill_in "User name", with: user.user_name
+         click_button
+         controller.should be_signed_in
+-        click_link "Sign out"
++        click_link "Sign out", method: :delete
+         controller.should_not be_signed_in
+       end
+     end
