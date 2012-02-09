@@ -32,7 +32,7 @@ module SessionsHelper
 
   def deny_access
     store_location
-    redirect_to signin_path, notice: "Please sign in to access this page."
+    redirect_to new_session_path, notice: "Please sign in to access this page."
   end
 
   private

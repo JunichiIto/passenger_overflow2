@@ -3,7 +3,7 @@ require 'spec_helper'
 describe "Answers" do
   before do
     user = Factory :user
-    visit signin_path
+    visit new_session_path
     fill_in :session_user_name, with: user.user_name
     click_button
     

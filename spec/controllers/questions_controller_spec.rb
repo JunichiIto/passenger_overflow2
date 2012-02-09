@@ -223,12 +223,12 @@ describe QuestionsController do
 
     it "should deny access to 'create'" do
       get :new
-      response.should redirect_to signin_path
+      response.should redirect_to new_session_path
     end
 
     it "should deny access to 'create'" do
       post :create
-      response.should redirect_to signin_path
+      response.should redirect_to new_session_path
     end
   end
 

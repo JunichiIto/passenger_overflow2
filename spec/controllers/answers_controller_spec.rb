@@ -108,17 +108,17 @@ describe AnswersController do
 
     it "should deny access to 'create'" do
       post :create, question_id: 1
-      response.should redirect_to signin_path
+      response.should redirect_to new_session_path
     end
 
     it "should deny access to 'accept'" do
       post :accept, question_id: @answer.question, id: @answer
-      response.should redirect_to signin_path
+      response.should redirect_to new_session_path
     end
     
     it "should deny access to 'vote'" do
       post :vote, question_id: @answer.question, id: @answer
-      response.should redirect_to signin_path
+      response.should redirect_to new_session_path
     end
   end
 end
