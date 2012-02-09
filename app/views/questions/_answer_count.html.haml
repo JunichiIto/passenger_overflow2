@@ -1,6 +1,4 @@
 - if question.accepted?
-  = content_tag :span,                                       |
-                pluralize(question.answers.count, "Answer"), |
-                class: "accepted"                            | 
+  %span.accepted= pluralize question.answers.count, "Answer"
 - else
   = pluralize question.answers.count, "Answer"

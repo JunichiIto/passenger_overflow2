@@ -1,9 +1,4 @@
 - if signed_in? && current_user.already_voted?(answer)
-  = content_tag :span,                                 | 
-                pluralize(answer.votes.count, "vote"), |
-                class: "voted",                        |
-                id: "votecnt#{answer.id}"              | 
+  %span.voted{id: "votecnt#{answer.id}"}= pluralize answer.votes.count, "vote"
 - else
-  = content_tag :span,                                 | 
-                pluralize(answer.votes.count, "vote"), | 
-                id: "votecnt#{answer.id}"              | 
+  %span{id: "votecnt#{answer.id}"}= pluralize answer.votes.count, "vote"
