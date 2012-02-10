@@ -1,4 +1,4 @@
 - if answer.errors.empty?
   %span.accepted Accepted
 - else
-  %span.error Already accepted
+  %span.error= answer.errors.full_messages.join(",")
