@@ -1,2 +1,2 @@
 :plain
-  $('accept#{@selected_answer.id}').update('#{escape_javascript render "questions/accepted"}')
+  $('accept#{@selected_answer.id}').update('#{escape_javascript render("questions/accepted", answer: @selected_answer)}')

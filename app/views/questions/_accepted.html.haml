@@ -1,1 +1,4 @@
-%span.accepted Accepted
+- if answer.errors.empty?
+  %span.accepted Accepted
+- else
+  %span.error Already accepted

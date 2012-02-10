@@ -12,6 +12,11 @@ class Answer < ActiveRecord::Base
   default_scope order: "answers.created_at DESC"
 
   def accepted!
+    if question.accepted_answer
+      errors[:base] << "Already accepted"
+      return nil
+    end
+
     question.accepted_answer = self
     self.class.transaction do
       question.save!

@@ -69,6 +69,24 @@ describe AnswersController do
         question.reload
       end.should change(question, :accepted_answer).from(nil).to(@answer)
     end
+    
+    describe "when already accepted" do
+      before do
+        other = Factory :user, user_name: "other"
+        another_answer = Factory :answer, question: @answer.question, user: other
+        another_answer.accepted!
+      end
+
+      it "should not accept twice" do
+        question = @answer.question
+        question.accepted_answer.should_not be_nil
+        lambda do
+          xhr :post, :accept, question_id: @answer.question, id: @answer
+          response.should be_success
+          question.reload
+        end.should_not change(question, :accepted_answer)
+      end
+    end
   end
 
   describe "post 'vote'" do

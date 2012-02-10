@@ -150,7 +150,8 @@ p.flash {
     font-size: 120%;
 }
 
-p.error {
+p.error,
+span.error {
     color: red;
 }
 

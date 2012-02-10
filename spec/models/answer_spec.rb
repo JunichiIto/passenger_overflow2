@@ -80,6 +80,8 @@ describe Answer do
     before do
       @question = Factory :question, user: @asker
       @answer = Factory :answer, question: @question, user: @user
+      other = Factory :user, user_name: "other"
+      @another_answer = Factory :answer, question: @question, user: other
     end
 
     it "should have an accept attribute" do
@@ -90,6 +92,23 @@ describe Answer do
       @answer.accepted!
       @question.accepted_answer_id.should == @answer.id
       @question.accepted_answer.should == @answer
+    end
+
+    it "should not be accepted twice" do
+      @answer.accepted!.should be_true
+      @answer.accepted!.should_not be_true
+      @answer.errors.should_not be_empty
+    end
+
+    describe "when alreadey accepted another answer" do
+      before do
+        @another_answer.accepted!
+      end
+
+      it "should not be accepted" do
+        @answer.accepted!.should_not be_true
+        @answer.errors.should_not be_empty
+      end
     end
 
     describe "reputation on asker" do

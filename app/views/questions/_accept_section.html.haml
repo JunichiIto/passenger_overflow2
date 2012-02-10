@@ -1,6 +1,6 @@
 - if @question.accepted?
   - if @question.accepted_answer_id == answer.id
-    = render "questions/accepted"
+    = render "questions/accepted", answer: @question.accepted_answer
 - else
   - if current_user == @question.user
     %span{id: "accept#{answer.id}"}

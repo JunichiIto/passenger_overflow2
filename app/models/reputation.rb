@@ -1,8 +1,3 @@
-    #t.integer  "activity_id"
-    #t.string   "activity_type"
-    #t.integer  "user_id"
-    #t.string   "reason"
-    #t.integer  "point"
 class Reputation < ActiveRecord::Base
   belongs_to :user
   belongs_to :activity, polymorphic: true
