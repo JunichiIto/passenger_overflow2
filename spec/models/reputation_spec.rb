@@ -24,6 +24,46 @@ describe Reputation do
                        point: 2 }
   end  
 
+  describe "validations" do
+    before do
+      @valid_attr = @vote_attr.merge user_id: @answer.user
+    end
+
+    it "should create a new instance given valid attributes" do
+      Reputation.create! @valid_attr
+    end
+
+    it "should require an activity_id" do
+      rep = Reputation.new @valid_attr.merge activity_id: nil
+      rep.should_not be_valid
+    end
+
+    it "should require an activity_type" do
+      rep = Reputation.new @valid_attr.merge activity_type: nil
+      rep.should_not be_valid
+    end
+
+    it "should require a reason" do
+      rep = Reputation.new @valid_attr.merge user_id: nil
+      rep.should_not be_valid
+    end
+
+    it "should require a reason" do
+      rep = Reputation.new @valid_attr.merge reason: nil
+      rep.should_not be_valid
+    end
+
+    it "should require a point" do
+      rep = Reputation.new @valid_attr.merge point: nil
+      rep.should_not be_valid
+    end
+
+    it "should reject unknown reason" do
+      rep = Reputation.new @valid_attr.merge reason: "foobar"
+      rep.should_not be_valid
+    end
+  end
+
   describe "user associations" do
     before do
       @reputation = @teacher.reputations.create @vote_attr

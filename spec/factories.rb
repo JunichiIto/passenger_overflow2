@@ -26,6 +26,6 @@ end
 Factory.define :reputation do |r|
   r.association :activity, factory: :vote
   r.association :user
-  r.reason "voteup"
+  r.reason "upvote"
   r.point 10
 end

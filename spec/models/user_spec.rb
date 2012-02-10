@@ -6,33 +6,35 @@ describe User do
     @attr = { user_name: "junichiito" }
   end
 
-  it "should create a new instance given valid attributes" do
-    User.create! @attr
-  end
-
-  it "should require a name" do
-    no_user_name_user = User.new
-    no_user_name_user.should_not be_valid
-  end
-
-  it "should reject user_names that are too long" do
-    long_name = "a" * 21
-    long_name_user = User.new @attr.merge user_name: long_name
-    long_name_user.should_not be_valid
-  end
-
-  it "should reject invalid user_names" do
-    names = ["UpperCase", "Include Space", "にほんご", 'symbol#$%etc']
-    names.each do |name|
-      invalid_user_name_user = User.new @attr.merge user_name: name
-      invalid_user_name_user.should_not be_valid
+  describe "validations" do
+    it "should create a new instance given valid attributes" do
+      User.create! @attr
     end
-  end
 
-  it "should reject duplicate user_names" do
-    User.create! @attr
-    user_with_duplicate_email = User.new @attr
-    user_with_duplicate_email.should_not be_valid
+    it "should require a name" do
+      no_user_name_user = User.new
+      no_user_name_user.should_not be_valid
+    end
+
+    it "should reject user_names that are too long" do
+      long_name = "a" * 21
+      long_name_user = User.new @attr.merge user_name: long_name
+      long_name_user.should_not be_valid
+    end
+
+    it "should reject invalid user_names" do
+      names = ["UpperCase", "Include Space", "にほんご", 'symbol#$%etc']
+      names.each do |name|
+        invalid_user_name_user = User.new @attr.merge user_name: name
+        invalid_user_name_user.should_not be_valid
+      end
+    end
+
+    it "should reject duplicate user_names" do
+      User.create! @attr
+      user_with_duplicate_email = User.new @attr
+      user_with_duplicate_email.should_not be_valid
+    end
   end
 
   describe "authenticate method" do
@@ -166,8 +168,8 @@ describe User do
       answer = Factory :answer, question: question, user: @user
       vote1 = Factory :vote, user: asker, answer: answer
       vote2 = Factory :vote, user: other, answer: answer
-      @reputation1 = Factory :reputation, user: @user, activity:vote1, created_at: 1.day.ago
-      @reputation2 = Factory :reputation, user: @user, activity:vote2, created_at: 1.hour.ago
+      @reputation1 = Factory :reputation, user: @user, activity: vote1, created_at: 1.day.ago
+      @reputation2 = Factory :reputation, user: @user, activity: vote2, created_at: 1.hour.ago
     end    
 
     it "should have the right reputations in the right order" do
