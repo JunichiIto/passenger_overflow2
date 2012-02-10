@@ -85,28 +85,28 @@ describe Answer do
     end
 
     it "should have an accept attribute" do
-      @answer.should respond_to :accepted!
+      @answer.should respond_to :accepted
     end
 
     it "should be accepted" do
-      @answer.accepted!
+      @answer.accepted
       @question.accepted_answer_id.should == @answer.id
       @question.accepted_answer.should == @answer
     end
 
     it "should not be accepted twice" do
-      @answer.accepted!.should be_true
-      @answer.accepted!.should_not be_true
+      @answer.accepted.should be_true
+      @answer.accepted.should_not be_true
       @answer.errors.should_not be_empty
     end
 
     describe "when alreadey accepted another answer" do
       before do
-        @another_answer.accepted!
+        @another_answer.accepted
       end
 
       it "should not be accepted" do
-        @answer.accepted!.should_not be_true
+        @answer.accepted.should_not be_true
         @answer.errors.should_not be_empty
       end
     end
@@ -114,12 +114,12 @@ describe Answer do
     describe "reputation on asker" do
       it "should increase asker's reputation" do
         lambda do
-          @answer.accepted!
+          @answer.accepted
         end.should change(@asker.reputations, :size).from(0).to(1)
       end
 
       it "should add the right reputation" do
-        @answer.accepted!
+        @answer.accepted
         rep = @asker.reputations.pop
         rep.activity.should == @answer
         rep.reason.should == "accepted"
@@ -131,12 +131,12 @@ describe Answer do
     describe "reputation on teacher" do
       it "should increase teacher's reputation" do
         lambda do
-          @answer.accepted!
+          @answer.accepted
         end.should change(@user.reputations, :size).from(0).to(1)
       end
 
       it "should add the right reputation" do
-        @answer.accepted!
+        @answer.accepted
         rep = @user.reputations.pop
         rep.activity.should == @answer
         rep.reason.should == "accept"
@@ -150,7 +150,7 @@ describe Answer do
         end        
         it "should not increase reputation" do
           lambda do
-            @self_ans.accepted!
+            @self_ans.accepted
           end.should_not change(@asker.reputations, :size)
         end
       end

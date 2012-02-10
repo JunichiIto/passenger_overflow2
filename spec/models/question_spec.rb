@@ -72,7 +72,7 @@ describe Question do
 
     describe "when accepted" do
       before do
-        @answer.accepted!
+        @answer.accepted
       end
 
       it "should be accepted" do

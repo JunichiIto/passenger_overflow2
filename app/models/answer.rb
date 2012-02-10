@@ -11,7 +11,7 @@ class Answer < ActiveRecord::Base
 
   default_scope order: "answers.created_at DESC"
 
-  def accepted!
+  def accepted
     if question.accepted_answer
       errors[:base] << "Already accepted"
       return nil

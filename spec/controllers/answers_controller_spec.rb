@@ -74,7 +74,7 @@ describe AnswersController do
       before do
         other = Factory :user, user_name: "other"
         another_answer = Factory :answer, question: @answer.question, user: other
-        another_answer.accepted!
+        another_answer.accepted
       end
 
       it "should not accept twice" do
