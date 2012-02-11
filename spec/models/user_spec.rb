@@ -102,36 +102,36 @@ describe User do
 
     it "should increment votes count in user after vote cast" do
       lambda do
-        @asker.vote! @answer
+        @asker.vote @answer
       end.should change(@asker.votes, :size).by(1)      
     end
 
     it "should increment votes count in answer after vote cast" do
       lambda do
-        @asker.vote! @answer
+        @asker.vote @answer
       end.should change(@answer.votes, :count).by(1)
     end  
     
     it "should be already voted after vote cast" do
       @asker.already_voted?(@answer).should be_false
-      @asker.vote! @answer
+      @asker.vote @answer
       @asker.already_voted?(@answer).should be_true
     end
 
     it "should not vote again when already voted" do
-      @asker.vote!(@answer).should be_true
-      @asker.vote!(@answer).should_not be_true
+      @asker.vote(@answer).should be_true
+      @asker.vote(@answer).should_not be_true
       @answer.errors.should_not be_blank
     end
 
     it "should increase teacher's reputation" do
       lambda do
-        @asker.vote! @answer
+        @asker.vote @answer
       end.should change(@user.reputations, :size).from(0).to(1)
     end
 
     it "should have the right reputation" do
-      vote = @asker.vote! @answer
+      vote = @asker.vote @answer
       rep = @user.reputations.pop
       rep.activity.should == vote
       rep.reason.should == "upvote"
@@ -149,7 +149,7 @@ describe User do
 
       describe "when already voted" do
         before do
-          @asker.vote! @answer
+          @asker.vote @answer
         end
   
         it "should not be okay" do
@@ -194,7 +194,7 @@ describe User do
 
       #user answers a question and is accepted and voted
       answer.accepted
-      other.vote! answer
+      other.vote answer
 
       #user asks a question and accept answer
       my_question = Factory :question, user: @user

@@ -16,7 +16,7 @@ class User < ActiveRecord::Base
     find_by_user_name user_name
   end
 
-  def vote!(answer)
+  def vote(answer)
     if votes.find_by_answer_id answer.id
       # add error not on user but answer
       # because user must be current user(global object)

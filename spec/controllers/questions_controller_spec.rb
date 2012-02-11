@@ -169,7 +169,7 @@ describe QuestionsController do
 
         describe "and answer already voted" do
           before do
-            @asker.vote! @answer
+            @asker.vote @answer
           end
 
           it "should have 3 vote links" do
@@ -204,7 +204,7 @@ describe QuestionsController do
 
       describe "when already voted" do
         before do
-          @asker.vote! @answer
+          @asker.vote @answer
         end
 
         it "should indicate vote count" do
