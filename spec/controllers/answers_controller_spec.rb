@@ -127,7 +127,7 @@ describe AnswersController do
         end.should_not change(@answer.votes, :size)
       end
 
-      it "should increment votes count in asker" do
+      it "should not increment votes count in asker" do
         lambda do
           xhr :post, :vote, question_id: @answer.question, id: @answer
           response.should be_success
