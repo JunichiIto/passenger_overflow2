@@ -12,8 +12,9 @@ class Answer < ActiveRecord::Base
   default_scope order: "answers.created_at DESC"
 
   def accepted
-    if question.accepted_answer
-      errors[:base] << "Already accepted"
+    # not sure if on-rails...
+    if question.accepted?
+      errors.add :base, "Already accepted"
       return nil
     end
 
