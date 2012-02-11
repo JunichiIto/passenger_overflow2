@@ -17,6 +17,13 @@ class User < ActiveRecord::Base
   end
 
   def vote!(answer)
+    if votes.find_by_answer_id answer.id
+      # add error not on user but answer
+      # because user must be current user(global object)
+      answer.errors.add :base, "Already voted"
+      return nil
+    end
+
     votes.create! answer: answer do |vote|
       vote.save!
       answer.user.reputations.create! activity: vote, reason: "upvote", point: 10

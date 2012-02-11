@@ -28,6 +28,7 @@ class AnswersController < ApplicationController
 
   def vote
     @voted_answer = Answer.find params[:id]
+    # display error message in view
     current_user.vote! @voted_answer
     respond_to do |format|
       format.html { redirect_to @question }

@@ -113,6 +113,28 @@ describe AnswersController do
         @answer.votes.reload
       end.should change(@asker.votes, :size).by(1)
     end
+
+    describe "when already voted" do
+      before do
+        @asker.vote! @answer
+      end
+
+      it "should not increment votes count in answer" do
+        lambda do
+          xhr :post, :vote, question_id: @answer.question, id: @answer
+          response.should be_success
+          @answer.votes.reload
+        end.should_not change(@answer.votes, :size)
+      end
+
+      it "should increment votes count in asker" do
+        lambda do
+          xhr :post, :vote, question_id: @answer.question, id: @answer
+          response.should be_success
+          @answer.votes.reload
+        end.should_not change(@asker.votes, :size)
+      end
+    end
   end
 
   describe "access control" do

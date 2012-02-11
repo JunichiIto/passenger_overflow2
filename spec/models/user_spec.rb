@@ -118,6 +118,12 @@ describe User do
       @asker.already_voted?(@answer).should be_true
     end
 
+    it "should not vote again when already voted" do
+      @asker.vote!(@answer).should be_true
+      @asker.vote!(@answer).should_not be_true
+      @answer.errors.should_not be_blank
+    end
+
     it "should increase teacher's reputation" do
       lambda do
         @asker.vote! @answer
