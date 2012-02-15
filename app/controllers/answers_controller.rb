@@ -19,7 +19,7 @@ class AnswersController < ApplicationController
   def accept
     @selected_answer = Answer.find params[:id]
     # display error message in view
-    @selected_answer.accepted
+    @question.accept @selected_answer
     respond_to do |format|
       format.html { redirect_to @question }
       format.js

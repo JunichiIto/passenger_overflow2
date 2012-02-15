@@ -63,26 +63,105 @@ describe Question do
     before do
       @asker = Factory :user, user_name: "someone"
       @question = Factory :question, user: @asker
-      @answer = Factory :answer, question: @question, user: @user, created_at: 1.day.ago
+      @answer = Factory :answer, question: @question, user: @user
+      other = Factory :user, user_name: "other"
+      @another_answer = Factory :answer, question: @question, user: other
     end
 
-    it "should have an accepted? attribute" do
-      @question.should respond_to :accepted?
+    it "should have an accept attribute" do
+      @question.should respond_to :accept
     end
 
-    describe "when accepted" do
+    it "should accept answer" do
+      @question.accept(@answer).should be_true
+      @question.accepted_answer_id.should == @answer.id
+      @question.accepted_answer.should == @answer
+    end
+
+    it "should not accept twice" do
+      @question.accept(@answer).should be_true
+      @question.accept(@answer).should_not be_true
+      @question.should_not be_valid
+      @question.errors.should_not be_empty
+    end
+
+    describe "when alreadey accepted another answer" do
       before do
-        @answer.accepted
+        @question.accept @another_answer
       end
 
-      it "should be accepted" do
-        @question.should be_accepted
+      it "should not accept" do
+        @question.accept(@answer).should_not be_true
+        @question.should_not be_valid
+        @question.errors.should_not be_empty
       end
     end
 
-    describe "when not accepted" do
-      it "should not be accepted" do
-        @question.should_not be_accepted
+    describe "reputation on asker" do
+      it "should increase asker's reputation" do
+        lambda do
+          @question.accept @answer
+        end.should change(@asker.reputations, :size).from(0).to(1)
+      end
+
+      it "should add the right reputation" do
+        @question.accept @answer
+        rep = @asker.reputations.pop
+        rep.activity.should == @answer
+        rep.reason.should == "accepted"
+        rep.point.should == 2
+        rep.user.should == @asker
+      end
+    end
+
+    describe "reputation on teacher" do
+      it "should increase teacher's reputation" do
+        lambda do
+          @question.accept @answer
+        end.should change(@user.reputations, :size).from(0).to(1)
+      end
+
+      it "should add the right reputation" do
+        @question.accept @answer
+        rep = @user.reputations.pop
+        rep.activity.should == @answer
+        rep.reason.should == "accept"
+        rep.point.should == 15
+        rep.user.should == @user
+      end
+
+      describe "when accept myself" do
+        before do
+          @self_ans = Factory :answer, question: @question, user: @asker
+        end        
+
+        it "should not increase reputation" do
+          lambda do
+            @question.accept @self_ans
+          end.should_not change(@asker.reputations, :size)
+        end
+      end
+    end
+
+    describe "accepted? attribute" do
+      it "should have an accepted? attribute" do
+        @question.should respond_to :accepted?
+      end
+
+      describe "when accepted" do
+        before do
+          @answer.accepted
+        end
+
+        it "should be accepted" do
+          @question.should be_accepted
+        end
+      end
+
+      describe "when not accepted" do
+        it "should not be accepted" do
+          @question.should_not be_accepted
+        end
       end
     end
   end

@@ -1,4 +1,4 @@
-- if answer.errors.empty?
+- if @question.errors.empty?
   %span.accepted Accepted
 - else
-  %span.error= answer.errors.full_messages.join(",")
+  %span.error= @question.errors.full_messages.join(",")
