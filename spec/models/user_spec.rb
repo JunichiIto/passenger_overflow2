@@ -193,13 +193,13 @@ describe User do
       vote = Factory :vote, user: asker, answer: answer
 
       #user answers a question and is accepted and voted
-      answer.accepted
+      question.accept answer
       other.vote answer
 
       #user asks a question and accept answer
       my_question = Factory :question, user: @user
       ans_to_my_question = Factory :answer, question: my_question, user: other
-      ans_to_my_question.accepted 
+      my_question.accept ans_to_my_question
     end    
 
     it "should have 3 reputations" do

@@ -150,7 +150,7 @@ describe Question do
 
       describe "when accepted" do
         before do
-          @answer.accepted
+          @question.accept @answer
         end
 
         it "should be accepted" do

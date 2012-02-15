@@ -56,35 +56,33 @@ describe AnswersController do
       user = Factory :user
       test_sign_in user
       asker = Factory :user, user_name: "beginner"
-      question = Factory :question, user: asker
-      @answer = Factory :answer, question: question, user: user
+      @question = Factory :question, user: asker
+      @answer = Factory :answer, question: @question, user: user
     end
 
     it "should accept an answer using Ajax" do
-      question = @answer.question
-      question.accepted_answer.should be_nil
+      @question.accepted_answer.should be_nil
       lambda do
-        xhr :post, :accept, question_id: @answer.question, id: @answer
+        xhr :post, :accept, question_id: @question, id: @answer
         response.should be_success
-        question.reload
-      end.should change(question, :accepted_answer).from(nil).to(@answer)
+        @question.reload
+      end.should change(@question, :accepted_answer).from(nil).to(@answer)
     end
     
     describe "when already accepted" do
       before do
         other = Factory :user, user_name: "other"
-        another_answer = Factory :answer, question: @answer.question, user: other
-        another_answer.accepted
+        another_answer = Factory :answer, question: @question, user: other
+        @question.accept another_answer
       end
 
       it "should not accept twice" do
-        question = @answer.question
-        question.accepted_answer.should_not be_nil
+        @question.accepted_answer.should_not be_nil
         lambda do
-          xhr :post, :accept, question_id: @answer.question, id: @answer
+          xhr :post, :accept, question_id: @question, id: @answer
           response.should be_success
-          question.reload
-        end.should_not change(question, :accepted_answer)
+          @question.reload
+        end.should_not change(@question, :accepted_answer)
       end
     end
   end
