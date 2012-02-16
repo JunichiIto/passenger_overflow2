@@ -8,7 +8,7 @@ class Question < ActiveRecord::Base
   validates :title, presence: true, length: { maximum: 255 }
   validates :content, presence: true
   validates :user_id, presence: true
-  validate_on_update :first_acception?
+  validate :first_acception?, on: :update
 
   default_scope order: "questions.created_at DESC"
 
@@ -31,7 +31,7 @@ class Question < ActiveRecord::Base
 
   private
   def first_acception?
-    if @on_accept && !self.class.find(self).accepted_answer.nil?
+    if @on_accept && !accepted_answer_id_was.nil?
       errors.add :base, "Already accepted"
     end
   end
