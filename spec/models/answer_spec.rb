@@ -75,4 +75,66 @@ describe Answer do
       @answer.votes.should include @vote2
     end
   end
+
+  describe "accepted! method" do
+    before do
+      @answer = Factory :answer, question: @question, user: @user
+    end
+
+    it "should have an accepted method" do
+      @answer.should respond_to :accepted!
+    end
+
+    it "should be accepted" do
+      @answer.accepted!
+      @question.accepted_answer_id.should == @answer.id
+      @question.accepted_answer.should == @answer
+    end
+
+    describe "reputation on asker" do
+      it "should increase asker's reputation" do
+        lambda do
+          @answer.accepted!
+        end.should change(@asker.reputations, :size).from(0).to(1)
+      end
+
+      it "should add the right reputation" do
+        @answer.accepted!
+        rep = @asker.reputations.pop
+        rep.activity.should == @answer
+        rep.reason.should == "accepted"
+        rep.point.should == 2
+        rep.user.should == @asker
+      end
+    end
+
+    describe "reputation on teacher" do
+      it "should increase teacher's reputation" do
+        lambda do
+          @answer.accepted!
+        end.should change(@user.reputations, :size).from(0).to(1)
+      end
+
+      it "should add the right reputation" do
+        @answer.accepted!
+        rep = @user.reputations.pop
+        rep.activity.should == @answer
+        rep.reason.should == "accept"
+        rep.point.should == 15
+        rep.user.should == @user
+      end
+
+      describe "when accept myself" do
+        before do
+          @self_answer = Factory :answer, question: @question, user: @asker
+        end        
+
+        it "should not increase reputation" do
+          lambda do
+            @self_answer.accepted!
+          end.should_not change(@asker.reputations, :size)
+        end
+      end
+    end
+  end
 end

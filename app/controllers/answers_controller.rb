@@ -18,8 +18,14 @@ class AnswersController < ApplicationController
 
   def accept
     @selected_answer = Answer.find params[:id]
-    # display error message in view
-    @question.accept @selected_answer
+    if @question.accepted?
+      @class = "error"
+      @message = "Already accepted"
+    else
+      Answer.transaction do
+        @selected_answer.accepted!
+      end
+    end
     respond_to do |format|
       format.html { redirect_to @question }
       format.js
