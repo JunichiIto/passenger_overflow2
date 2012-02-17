@@ -123,4 +123,60 @@ describe Reputation do
       @reputation.question.should == @question
     end
   end
+
+  describe "create_for_accept! method" do
+    before do
+      @answer = Factory :answer, question: @question, user: @teacher
+    end
+
+    it "should have a create_for_accept! method" do
+      Reputation.should respond_to :create_for_accept!
+    end
+
+    describe "reputation on asker" do
+      it "should increase asker's reputation" do
+        lambda do
+          Reputation.create_for_accept! @answer
+        end.should change(@asker.reputations, :size).from(0).to(1)
+      end
+
+      it "should add the right reputation" do
+        Reputation.create_for_accept! @answer
+        rep = @asker.reputations.pop
+        rep.activity.should == @answer
+        rep.reason.should == "accepted"
+        rep.point.should == 2
+        rep.user.should == @asker
+      end
+    end
+
+    describe "reputation on teacher" do
+      it "should increase teacher's reputation" do
+        lambda do
+          Reputation.create_for_accept! @answer
+        end.should change(@teacher.reputations, :size).from(0).to(1)
+      end
+
+      it "should add the right reputation" do
+        Reputation.create_for_accept! @answer
+        rep = @teacher.reputations.pop
+        rep.activity.should == @answer
+        rep.reason.should == "accept"
+        rep.point.should == 15
+        rep.user.should == @teacher
+      end
+
+      describe "when accept myself" do
+        before do
+          @self_answer = Factory :answer, question: @question, user: @asker
+        end        
+
+        it "should not increase reputation" do
+          lambda do
+            Reputation.create_for_accept! @self_answer
+          end.should_not change(@asker.reputations, :size)
+        end
+      end
+    end
+  end
 end

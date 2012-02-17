@@ -22,9 +22,7 @@ class AnswersController < ApplicationController
       @class = "error"
       @message = "Already accepted"
     else
-      Answer.transaction do
-        @selected_answer.accepted!
-      end
+      @selected_answer.accepted!
     end
     respond_to do |format|
       format.html { redirect_to @question }

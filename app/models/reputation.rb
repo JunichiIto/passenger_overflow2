@@ -10,6 +10,15 @@ class Reputation < ActiveRecord::Base
 
   default_scope order: "reputations.created_at DESC"
 
+  def self.create_for_accept!(answer)
+    teacher = answer.user
+    asker = answer.question.user
+    if teacher != asker
+      asker.reputations.create! reason: "accepted", point: 2, activity: answer
+      teacher.reputations.create! reason: "accept", point: 15, activity: answer
+    end
+  end
+
   def question
     activity.question
   end

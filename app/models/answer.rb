@@ -12,10 +12,9 @@ class Answer < ActiveRecord::Base
   default_scope order: "answers.created_at DESC"
 
   def accepted!
-    question.update_attribute :accepted_answer_id, id
-    if user != question.user
-      question.user.reputations.create! reason: "accepted", point: 2, activity: self
-      user.reputations.create! reason: "accept", point: 15, activity: self
+    self.class.transaction do
+      question.update_attribute :accepted_answer_id, id
+      Reputation.create_for_accept! self
     end
   end
 end
