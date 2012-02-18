@@ -1,4 +1,2 @@
-- @class = @class || "accepted"
-- @message = @message || "Accepted"
-%span{class: "#{@class}"}
-  = @message
+%span{class: "#{@class || 'accepted'}"}
+  = @message || "Accepted"
