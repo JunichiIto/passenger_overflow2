@@ -125,10 +125,6 @@ describe Reputation do
   end
 
   describe "create_for_accept! method" do
-    before do
-      @answer = Factory :answer, question: @question, user: @teacher
-    end
-
     it "should have a create_for_accept! method" do
       Reputation.should respond_to :create_for_accept!
     end
@@ -176,6 +172,33 @@ describe Reputation do
             Reputation.create_for_accept! @self_answer
           end.should_not change(@asker.reputations, :size)
         end
+      end
+    end
+  end
+
+  describe "create_for_vote! method" do
+    before do
+      @vote = Factory :vote, user: @asker, answer: @answer
+    end
+
+    it "should have a create_for_vote! method" do
+      Reputation.should respond_to :create_for_vote!
+    end
+
+    describe "reputation on teacher" do
+      it "should increase teacher's reputation" do
+        lambda do
+          Reputation.create_for_vote! @vote
+        end.should change(@teacher.reputations, :size).from(0).to(1)
+      end
+
+      it "should add the right reputation" do
+        Reputation.create_for_vote! @vote
+        rep = @teacher.reputations.pop
+        rep.activity.should == @vote
+        rep.reason.should == "upvote"
+        rep.point.should == 10
+        rep.user.should == @teacher
       end
     end
   end

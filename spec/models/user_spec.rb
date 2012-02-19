@@ -124,14 +124,6 @@ describe User do
       end.should change(@user.reputations, :size).from(0).to(1)
     end
 
-    it "should have the right reputation" do
-      vote = @asker.vote! @answer
-      rep = @user.reputations.pop
-      rep.activity.should == vote
-      rep.reason.should == "upvote"
-      rep.point.should == 10
-    end
-
     describe "can_vote?" do
       it "should have a can_vote? method" do
         @asker.should respond_to :can_vote?

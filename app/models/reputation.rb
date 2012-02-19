@@ -19,6 +19,10 @@ class Reputation < ActiveRecord::Base
     end
   end
 
+  def self.create_for_vote!(vote)
+    vote.answer.user.reputations.create! activity: vote, reason: "upvote", point: 10
+  end
+
   def question
     activity.question
   end
