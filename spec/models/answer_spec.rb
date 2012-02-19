@@ -61,9 +61,9 @@ describe Answer do
   describe "vote associations" do
     before do
       @answer = Factory :answer, question: @question, user: @user, created_at: 1.day.ago
-      @vote1 = @asker.vote @answer
+      @vote1 = @asker.vote! @answer
       other_user = Factory :user, user_name: "other"
-      @vote2 = other_user.vote @answer
+      @vote2 = other_user.vote! @answer
     end
 
     it "should have a votes attribute" do

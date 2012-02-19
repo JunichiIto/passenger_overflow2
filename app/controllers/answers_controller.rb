@@ -19,7 +19,7 @@ class AnswersController < ApplicationController
   def accept
     @selected_answer = Answer.find params[:id]
     if @question.accepted?
-      @class = "error"
+      @css_class = "error"
       @message = "Already accepted"
     else
       @selected_answer.accepted!
@@ -31,9 +31,13 @@ class AnswersController < ApplicationController
   end
 
   def vote
-    @voted_answer = Answer.find params[:id]
-    # display error message in view
-    current_user.vote @voted_answer
+    @selected_answer = Answer.find params[:id]
+    if current_user.already_voted? @selected_answer
+      @css_class = "error"
+      @message = "Already voted"
+    else
+      current_user.vote! @selected_answer
+    end
     respond_to do |format|
       format.html { redirect_to @question }
       format.js

@@ -40,7 +40,7 @@ describe UsersController do
 
       #user answers a question and is accepted and voted
       answer.accepted!
-      other.vote answer
+      other.vote! answer
 
       #user asks a question and accept answer
       my_question = Factory :question, user: @user

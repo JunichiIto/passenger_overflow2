@@ -114,7 +114,7 @@ describe AnswersController do
 
     describe "when already voted" do
       before do
-        @asker.vote @answer
+        @asker.vote! @answer
       end
 
       it "should not increment votes count in answer" do
