@@ -1,7 +1,5 @@
-- if @voted_answer.errors.empty?
-  :plain
-    $('votelink#{@voted_answer.id}').update("")
-    $('votecnt#{@voted_answer.id}').update('#{escape_javascript render("questions/vote_count", answer:  @voted_answer)}')
-- else
-  :plain
-    $('votelink#{@voted_answer.id}').update('<span class="error">#{@voted_answer.errors.full_messages.join(",")}</span>')
+- message = @vote.errors.full_messages.join ","
+- css_class = @vote.errors.any? ? "error" : ""
+:plain
+  $('votelink#{@vote.answer.id}').update('#{escape_javascript content_tag(:span, message, class: css_class)}')
+  $('votecnt#{@vote.answer.id}').update('#{escape_javascript render("questions/vote_count", answer: @vote.answer)}')

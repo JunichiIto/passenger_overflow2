@@ -17,16 +17,10 @@ class User < ActiveRecord::Base
   end
 
   def vote(answer)
-    if votes.find_by_answer_id answer.id
-      # add error not on user but answer
-      # because user must be current user(global object)
-      answer.errors.add :base, "Already voted"
-      return nil
-    end
-
-    votes.create! answer: answer do |vote|
-      vote.save!
-      Reputation.create_for_vote! vote
+    votes.create answer: answer do |vote|
+      if vote.save
+        Reputation.create_for_vote! vote
+      end
     end
   end
 

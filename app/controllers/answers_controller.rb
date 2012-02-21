@@ -27,9 +27,9 @@ class AnswersController < ApplicationController
   end
 
   def vote
-    @voted_answer = Answer.find params[:id]
+    selected_answer = Answer.find params[:id]
     # display error message in view
-    current_user.vote @voted_answer
+    @vote = current_user.vote selected_answer
     respond_to do |format|
       format.html { redirect_to @question }
       format.js

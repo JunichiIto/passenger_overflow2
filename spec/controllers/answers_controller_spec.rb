@@ -129,7 +129,7 @@ describe AnswersController do
         lambda do
           xhr :post, :vote, question_id: @answer.question, id: @answer
           response.should be_success
-          @answer.votes.reload
+          @asker.votes.reload
         end.should_not change(@asker.votes, :size)
       end
     end

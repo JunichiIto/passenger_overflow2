@@ -177,10 +177,6 @@ describe Reputation do
   end
 
   describe "create_for_vote! method" do
-    before do
-      @vote = Factory :vote, user: @asker, answer: @answer
-    end
-
     it "should have a create_for_vote! method" do
       Reputation.should respond_to :create_for_vote!
     end

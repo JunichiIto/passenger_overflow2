@@ -119,9 +119,8 @@ describe User do
     end
 
     it "should not vote again when already voted" do
-      @asker.vote(@answer).should be_true
-      @asker.vote(@answer).should_not be_true
-      @answer.errors.should_not be_blank
+      @asker.vote(@answer).errors.should be_empty
+      @asker.vote(@answer).errors.should_not be_empty
     end
 
     it "should increase teacher's reputation" do
