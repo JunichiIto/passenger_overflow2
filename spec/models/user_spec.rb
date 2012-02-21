@@ -189,8 +189,8 @@ describe User do
 
       #user asks a question and accept answer
       my_question = Factory :question, user: @user
-      ans_to_my_question = Factory :answer, question: my_question, user: other
-      my_question.accept ans_to_my_question
+      answer_to_my_question = Factory :answer, question: my_question, user: other
+      my_question.accept answer_to_my_question
     end    
 
     it "should have 3 reputations" do
