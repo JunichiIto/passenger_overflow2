@@ -8,21 +8,17 @@ class Question < ActiveRecord::Base
   validates :title, presence: true, length: { maximum: 255 }
   validates :content, presence: true
   validates :user_id, presence: true
-  validate :first_acception?, on: :update
+  validate :first_acception?, on: :update, if: :called_from_accept?
 
   default_scope order: "questions.created_at DESC"
 
   def accept(answer)
-    @on_accept = true
-    self.accepted_answer = answer
     self.class.transaction do
-      return false unless save
-      if user != answer.user
-        user.reputations.create! reason: "accepted", point: 2, activity: answer
-        answer.user.reputations.create! reason: "accept", point: 15, activity: answer
+      self.accepted_answer = answer
+      if save
+        Reputation.create_for_accept! answer
       end
     end
-    true
   end
 
   def accepted?
@@ -31,8 +27,14 @@ class Question < ActiveRecord::Base
 
   private
   def first_acception?
-    if @on_accept && !accepted_answer_id_was.nil?
+    if !accepted_answer_id_was.nil?
       errors.add :base, "Already accepted"
+    end
+  end
+
+  def called_from_accept?
+    caller.find do |item|
+      item =~ /\/#{self.class.name.underscore}\.rb.*accept/
     end
   end
 end

@@ -76,12 +76,12 @@ describe Question do
       @question.accept(@answer).should be_true
       @question.accepted_answer_id.should == @answer.id
       @question.accepted_answer.should == @answer
+      @question.errors.should be_empty
     end
 
     it "should not accept twice" do
       @question.accept(@answer).should be_true
       @question.accept(@answer).should_not be_true
-      @question.should_not be_valid
       @question.errors.should_not be_empty
     end
 
@@ -92,7 +92,6 @@ describe Question do
 
       it "should not accept" do
         @question.accept(@answer).should_not be_true
-        @question.should_not be_valid
         @question.errors.should_not be_empty
       end
     end

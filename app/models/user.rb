@@ -26,7 +26,7 @@ class User < ActiveRecord::Base
 
     votes.create! answer: answer do |vote|
       vote.save!
-      answer.user.reputations.create! activity: vote, reason: "upvote", point: 10
+      Reputation.create_for_vote! vote
     end
   end
 
