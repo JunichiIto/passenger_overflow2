@@ -14,11 +14,9 @@ class Question < ActiveRecord::Base
 
   def accept(answer)
     self.class.transaction do
-      first_accept = !accepted?
       self.accepted_answer = answer
-      if save
-        Reputation.create_for_accept! answer if first_accept
-        true
+      if changed? && save
+        Reputation.create_for_accept! answer
       end
     end
   end
