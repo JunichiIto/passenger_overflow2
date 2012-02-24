@@ -79,10 +79,10 @@ describe Question do
       @question.errors.should be_empty
     end
 
-    it "should not accept twice" do
+    it "should accept twice" do
       @question.accept(@answer).should be_true
-      @question.accept(@answer).should_not be_true
-      @question.errors.should_not be_empty
+      @question.accept(@answer).should be_true
+      @question.errors.should be_empty
     end
 
     describe "when alreadey accepted another answer" do
@@ -102,11 +102,25 @@ describe Question do
           @question.accept @answer
         end.should change(@asker.reputations, :size).from(0).to(1)
       end
+
+      it "should increase asker's reputation only once" do
+        lambda do
+          @question.accept @answer
+          @question.accept @answer
+        end.should change(@asker.reputations, :size).from(0).to(1)
+      end
     end
 
     describe "reputation on teacher" do
       it "should increase teacher's reputation" do
         lambda do
+          @question.accept @answer
+        end.should change(@user.reputations, :size).from(0).to(1)
+      end
+
+      it "should increase teacher's reputation only once" do
+        lambda do
+          @question.accept @answer
           @question.accept @answer
         end.should change(@user.reputations, :size).from(0).to(1)
       end
