@@ -65,6 +65,7 @@ describe AnswersController do
       lambda do
         xhr :post, :accept, question_id: @question, id: @answer
         response.should be_success
+        response.should have_selector "span", content: "Accepted"
         @question.reload
       end.should change(@question, :accepted_answer).from(nil).to(@answer)
     end
@@ -81,6 +82,7 @@ describe AnswersController do
         lambda do
           xhr :post, :accept, question_id: @question, id: @answer
           response.should be_success
+          response.should have_selector "span", content: "Already accepted"
           @question.reload
         end.should_not change(@question, :accepted_answer)
       end
@@ -100,6 +102,7 @@ describe AnswersController do
       lambda do
         xhr :post, :vote, question_id: @answer.question, id: @answer
         response.should be_success
+        response.should have_selector "span", content: "1 vote"
         @answer.votes.reload
       end.should change(@answer.votes, :size).from(0).to(1)
     end
@@ -108,6 +111,7 @@ describe AnswersController do
       lambda do
         xhr :post, :vote, question_id: @answer.question, id: @answer
         response.should be_success
+        response.should have_selector "span", content: "1 vote"
         @answer.votes.reload
       end.should change(@asker.votes, :size).by(1)
     end
@@ -121,6 +125,8 @@ describe AnswersController do
         lambda do
           xhr :post, :vote, question_id: @answer.question, id: @answer
           response.should be_success
+          response.should have_selector "span", content: "Already voted"
+          response.should have_selector "span", content: "1 vote"
           @answer.votes.reload
         end.should_not change(@answer.votes, :size)
       end
@@ -129,6 +135,8 @@ describe AnswersController do
         lambda do
           xhr :post, :vote, question_id: @answer.question, id: @answer
           response.should be_success
+          response.should have_selector "span", content: "Already voted"
+          response.should have_selector "span", content: "1 vote"
           @asker.votes.reload
         end.should_not change(@asker.votes, :size)
       end
