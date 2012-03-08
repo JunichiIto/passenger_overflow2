@@ -1,3 +1,4 @@
 safe: true
 lsi: false
 pygments: true
+permalink: /passenger_overflow2/:year/:month/:day/:title
